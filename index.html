@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Derrick C Byron Trivia Overlay</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 40px;
+    }
+
+    .card {
+      width: min(1100px, 92vw);
+      border-radius: 28px;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 20px 80px rgba(0,0,0,0.45);
+      padding: 34px 34px 28px;
+      color: rgba(255,255,255,0.95);
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      font-size: 18px;
+      opacity: 0.95;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.14);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      opacity: 0.95;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 99px;
+      background: rgba(255,255,255,0.8);
+      opacity: 0.7;
+    }
+
+    .question {
+      font-size: clamp(26px, 3.1vw, 44px);
+      line-height: 1.12;
+      font-weight: 800;
+      margin: 10px 0 18px;
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .ans {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      font-size: clamp(16px, 1.5vw, 20px);
+    }
+
+    .ans strong {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.14);
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      margin-right: 12px;
+      flex: 0 0 auto;
+    }
+
+    .ans .left {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      min-width: 0;
+    }
+
+    .ans .text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      opacity: 0.95;
+    }
+
+    .status {
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      font-size: 15px;
+      opacity: 0.9;
+    }
+
+    .bar {
+      position: relative;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.12);
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .fill {
+      position: absolute;
+      inset: 0;
+      width: 0%;
+      background: rgba(255,255,255,0.85);
+      opacity: 0.55;
+    }
+
+    .reveal {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.14);
+      display: none;
+      font-size: 16px;
+    }
+
+    .reveal span {
+      font-weight: 900;
+    }
+
+    .hint {
+      font-size: 13px;
+      opacity: 0.6;
+      margin-top: 10px;
+    }
+
+    .fade {
+      animation: fadeIn 450ms ease both;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <div class="card fade">
+      <div class="top">
+        <div class="brand">Derrick C Byron</div>
+        <div class="pill"><span class="dot"></span><span id="mode">Question</span> • <span id="timer">20</span>s</div>
+      </div>
+
+      <div id="q" class="question">Loading trivia…</div>
+
+      <div class="answers">
+        <div class="ans" id="a1"><div class="left"><strong>A</strong><div class="text" id="t1"></div></div></div>
+        <div class="ans" id="a2"><div class="left"><strong>B</strong><div class="text" id="t2"></div></div></div>
+        <div class="ans" id="a3"><div class="left"><strong>C</strong><div class="text" id="t3"></div></div></div>
+        <div class="ans" id="a4"><div class="left"><strong>D</strong><div class="text" id="t4"></div></div></div>
+      </div>
+
+      <div class="reveal" id="revealBox">
+        Answer: <span id="revealText"></span>
+      </div>
+
+      <div class="status">
+        <div style="min-width: 140px" id="statusText">New question</div>
+        <div class="bar"><div class="fill" id="fill"></div></div>
+        <div style="min-width: 110px; text-align:right" id="nextText">Next soon</div>
+      </div>
+
+      <div class="hint">Tip: this page is meant to be used as a browser source overlay.</div>
+    </div>
+  </div>
+
+  <script>
+    // Simple built-in trivia bank (we can expand this later)
+    const trivia = [
+      {
+        q: "Which planet is known as the Red Planet?",
+        a: ["Mars", "Jupiter", "Venus", "Mercury"],
+        correct: "A"
+      },
+      {
+        q: "What is the closest star to Earth?",
+        a: ["Sirius", "The Sun", "Alpha Centauri", "Betelgeuse"],
+        correct: "B"
+      },
+      {
+        q: "Which note is the 5th in a C major scale?",
+        a: ["D", "E", "F", "G"],
+        correct: "D"
+      },
+      {
+        q: "Which element has the chemical symbol O?",
+        a: ["Gold", "Osmium", "Oxygen", "Iron"],
+        correct: "C"
+      },
+      {
+        q: "What galaxy is Earth located in?",
+        a: ["Andromeda", "Milky Way", "Sombrero", "Whirlpool"],
+        correct: "B"
+      }
+    ];
+
+    const qEl = document.getElementById("q");
+    const t1 = document.getElementById("t1");
+    const t2 = document.getElementById("t2");
+    const t3 = document.getElementById("t3");
+    const t4 = document.getElementById("t4");
+
+    const modeEl = document.getElementById("mode");
+    const timerEl = document.getElementById("timer");
+    const statusText = document.getElementById("statusText");
+    const nextText = document.getElementById("nextText");
+    const fill = document.getElementById("fill");
+
+    const revealBox = document.getElementById("revealBox");
+    const revealText = document.getElementById("revealText");
+
+    const questionSeconds = 20;   // time viewers see the question
+    const revealSeconds = 6;      // time answer is shown
+    const gapSeconds = 2;         // short gap before next question
+
+    let current = null;
+    let phase = "question"; // question | reveal | gap
+    let remaining = questionSeconds;
+    let tickHandle = null;
+
+    function pickQuestion() {
+      current = trivia[Math.floor(Math.random() * trivia.length)];
+      qEl.textContent = current.q;
+      t1.textContent = current.a[0];
+      t2.textContent = current.a[1];
+      t3.textContent = current.a[2];
+      t4.textContent = current.a[3];
+      revealBox.style.display = "none";
+      revealText.textContent = "";
+    }
+
+    function setPhase(newPhase) {
+      phase = newPhase;
+
+      if (phase === "question") {
+        modeEl.textContent = "Question";
+        statusText.textContent = "Answer in your head";
+        nextText.textContent = "Reveal soon";
+        remaining = questionSeconds;
+        fill.style.width = "0%";
+        pickQuestion();
+      }
+
+      if (phase === "reveal") {
+        modeEl.textContent = "Answer";
+        statusText.textContent = "Answer revealed";
+        nextText.textContent = "Next question";
+        remaining = revealSeconds;
+
+        const map = { A: current.a[0], B: current.a[1], C: current.a[2], D: current.a[3] };
+        revealText.textContent = current.correct + " • " + map[current.correct];
+        revealBox.style.display = "block";
+        fill.style.width = "100%";
+      }
+
+      if (phase === "gap") {
+        modeEl.textContent = "Next";
+        statusText.textContent = "Get ready";
+        nextText.textContent = "Starting";
+        remaining = gapSeconds;
+        revealBox.style.display = "none";
+        fill.style.width = "0%";
+      }
+
+      timerEl.textContent = remaining;
+    }
+
+    function step() {
+      remaining -= 1;
+      if (remaining < 0) remaining = 0;
+      timerEl.textContent = remaining;
+
+      if (phase === "question") {
+        const pct = ((questionSeconds - remaining) / questionSeconds) * 100;
+        fill.style.width = pct.toFixed(0) + "%";
+      }
+
+      if (remaining === 0) {
+        if (phase === "question") return setPhase("reveal");
+        if (phase === "reveal") return setPhase("gap");
+        if (phase === "gap") return setPhase("question");
+      }
+    }
+
+    function start() {
+      setPhase("question");
+      if (tickHandle) clearInterval(tickHandle);
+      tickHandle = setInterval(step, 1000);
+    }
+
+    start();
+  </script>
+</body>
+</html>
