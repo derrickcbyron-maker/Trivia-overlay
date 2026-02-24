@@ -2,253 +2,253 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Derrick C Byron Cinematic 24/7 Trivia</title>
+
   <style>
     :root{
-      --bg: rgba(20, 20, 24, 0.78);
-      --panel: rgba(255, 255, 255, 0.10);
-      --panel2: rgba(255, 255, 255, 0.08);
-      --stroke: rgba(255, 255, 255, 0.12);
-      --text: rgba(255, 255, 255, 0.95);
-      --muted: rgba(255, 255, 255, 0.72);
-      --good: rgba(76, 217, 100, 0.24);
-      --bad: rgba(255, 59, 48, 0.22);
-      --goodStroke: rgba(76, 217, 100, 0.65);
-      --badStroke: rgba(255, 59, 48, 0.60);
-      --accent: rgba(160, 120, 255, 0.85);
+      --panel-bg: rgba(25, 28, 35, 0.86);
+      --panel-border: rgba(255,255,255,0.14);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.66);
+      --chip-bg: rgba(255,255,255,0.10);
+      --chip-border: rgba(255,255,255,0.14);
+      --answer-bg: rgba(255,255,255,0.07);
+      --answer-border: rgba(255,255,255,0.12);
+      --correct: rgba(55, 210, 130, 0.30);
+      --wrong: rgba(240, 80, 80, 0.26);
+      --correct-border: rgba(55, 210, 130, 0.60);
+      --wrong-border: rgba(240, 80, 80, 0.55);
+      --bar-bg: rgba(255,255,255,0.10);
+      --bar-fill-a: rgba(120, 200, 255, 0.92);
+      --bar-fill-b: rgba(180, 120, 255, 0.92);
+      --shadow: 0 16px 44px rgba(0,0,0,0.30);
+      --radius: 18px;
     }
 
-    html, body{
-      height:100%;
-      margin:0;
+    html, body {
+      height: 100%;
+      margin: 0;
       background: transparent;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       color: var(--text);
     }
 
-    body{
-      display:flex;
-      align-items:flex-end;
-      justify-content:center;
-      padding: 24px;
-      box-sizing:border-box;
+    .wrap{
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      box-sizing: border-box;
     }
 
-    .overlay{
-      width: min(1200px, 96vw);
-      background: var(--bg);
-      border: 1px solid var(--stroke);
-      border-radius: 18px;
-      box-shadow: 0 18px 70px rgba(0,0,0,0.35);
-      padding: 18px 18px 14px 18px;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+    .panel{
+      width: min(1300px, 96vw);
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 22px 22px 18px 22px;
+      box-sizing: border-box;
     }
 
-    .toprow{
+    .top{
       display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 12px;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 16px;
       margin-bottom: 10px;
     }
 
     .brand{
-      font-size: 14px;
-      letter-spacing: 0.4px;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      opacity: 0.95;
+    }
+
+    .sub{
+      margin-top: 4px;
+      font-size: 13px;
       color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      letter-spacing: 0.25px;
     }
 
-    .pills{
+    .chips{
       display:flex;
+      gap: 10px;
       align-items:center;
-      gap: 8px;
       flex-wrap: wrap;
-      justify-content:flex-end;
+      justify-content: flex-end;
     }
 
-    .pill{
-      font-size: 12px;
-      color: rgba(255,255,255,0.88);
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.14);
+    .chip{
       padding: 6px 10px;
       border-radius: 999px;
-      line-height: 1;
-    }
-
-    .pill.dot{
-      display:flex;
-      align-items:center;
-      gap: 8px;
-    }
-
-    .dot i{
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      display:inline-block;
-      background: rgba(120, 200, 255, 0.95);
-      box-shadow: 0 0 12px rgba(120,200,255,0.55);
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      font-size: 12px;
+      color: rgba(255,255,255,0.80);
+      user-select: none;
+      white-space: nowrap;
     }
 
     .question{
+      font-size: clamp(30px, 3.6vw, 54px);
       font-weight: 800;
-      letter-spacing: -0.2px;
-      font-size: clamp(26px, 3.2vw, 46px);
-      line-height: 1.08;
-      margin: 0 0 14px 0;
-      min-height: 2.2em;
+      line-height: 1.06;
+      margin: 10px 0 16px 0;
+      letter-spacing: 0.2px;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.35);
     }
 
     .answers{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 12px;
+      gap: 12px;
+      margin-top: 6px;
     }
 
-    .ans{
+    .answer{
+      background: var(--answer-bg);
+      border: 1px solid var(--answer-border);
+      border-radius: 14px;
+      padding: 14px 14px;
       display:flex;
       align-items:center;
-      gap: 10px;
-      background: var(--panel);
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 12px;
-      padding: 12px 14px;
+      gap: 12px;
       min-height: 54px;
-      box-sizing:border-box;
-      overflow:hidden;
+      box-sizing: border-box;
     }
 
     .badge{
-      width: 26px;
-      height: 26px;
-      border-radius: 9px;
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
       display:flex;
       align-items:center;
       justify-content:center;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.18);
-      color: rgba(255,255,255,0.92);
       font-weight: 800;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.88);
       flex: 0 0 auto;
     }
 
-    .text{
-      font-size: clamp(14px, 1.35vw, 18px);
-      color: rgba(255,255,255,0.92);
-      line-height: 1.2;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
+    .answerText{
+      font-size: 18px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.86);
+      line-height: 1.15;
     }
 
-    .ans.correct{
-      background: var(--good);
-      border-color: var(--goodStroke);
+    .answer.correct{
+      background: var(--correct);
+      border-color: var(--correct-border);
+    }
+    .answer.wrong{
+      background: var(--wrong);
+      border-color: var(--wrong-border);
     }
 
-    .ans.wrong{
-      background: var(--bad);
-      border-color: var(--badStroke);
-    }
-
-    .footer{
+    .bottom{
       display:flex;
       align-items:center;
-      justify-content:space-between;
+      justify-content: space-between;
       gap: 12px;
+      margin-top: 14px;
       color: var(--muted);
-      font-size: 12px;
-    }
-
-    .barwrap{
-      flex: 1 1 auto;
-      height: 8px;
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 999px;
-      overflow:hidden;
+      font-size: 13px;
     }
 
     .bar{
+      flex: 1 1 auto;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--bar-bg);
+      overflow:hidden;
+      margin: 0 10px;
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+    .barFill{
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, rgba(120,200,255,0.95), var(--accent));
+      background: linear-gradient(90deg, var(--bar-fill-a), var(--bar-fill-b));
       border-radius: 999px;
-      transition: width 0.12s linear;
     }
 
-    .rightNote{
-      min-width: 92px;
-      text-align:right;
+    .hintLeft, .hintRight{
       white-space: nowrap;
+      user-select:none;
+    }
+
+    @media (max-width: 760px){
+      .answers{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
 
 <body>
-  <div class="overlay" id="overlay">
-    <div class="toprow">
-      <div class="brand" id="brand">Derrick C Byron Cinematic 24/7 Trivia</div>
-      <div class="pills">
-        <div class="pill dot"><i></i><span id="catPill">Category</span></div>
-        <div class="pill" id="phasePill">Question</div>
+  <div class="wrap">
+    <div class="panel">
+      <div class="top">
+        <div>
+          <div class="brand">Derrick C Byron Cinematic 24/7 Trivia</div>
+          <div class="sub" id="metaLine">Loading questions</div>
+        </div>
+
+        <div class="chips">
+          <div class="chip" id="categoryChip">Category</div>
+          <div class="chip" id="counterChip">0 of 0</div>
+        </div>
       </div>
-    </div>
 
-    <h1 class="question" id="qText">Loading</h1>
+      <div class="question" id="questionText">Loading</div>
 
-    <div class="answers" id="answers">
-      <div class="ans"><div class="badge">A</div><div class="text" id="a0"></div></div>
-      <div class="ans"><div class="badge">B</div><div class="text" id="a1"></div></div>
-      <div class="ans"><div class="badge">C</div><div class="text" id="a2"></div></div>
-      <div class="ans"><div class="badge">D</div><div class="text" id="a3"></div></div>
-    </div>
+      <div class="answers" id="answers">
+        <div class="answer"><div class="badge">A</div><div class="answerText">Loading</div></div>
+        <div class="answer"><div class="badge">B</div><div class="answerText">Loading</div></div>
+        <div class="answer"><div class="badge">C</div><div class="answerText">Loading</div></div>
+        <div class="answer"><div class="badge">D</div><div class="answerText">Loading</div></div>
+      </div>
 
-    <div class="footer">
-      <div>Answer in your head</div>
-      <div class="barwrap"><div class="bar" id="bar"></div></div>
-      <div class="rightNote" id="rightNote">Reveal soon</div>
+      <div class="bottom">
+        <div class="hintLeft" id="hintLeft">Answer in your head</div>
+        <div class="bar"><div class="barFill" id="barFill"></div></div>
+        <div class="hintRight" id="hintRight">Reveal soon</div>
+      </div>
     </div>
   </div>
 
   <script src="./questions.js?v=2"></script>
-
   <script>
-    const QUESTION_MS = 9000;
-    const REVEAL_MS = 3000;
+    // App logic lives here. questions.js only provides window.TRIVIA_BANK.
 
-    const els = {
-      qText: document.getElementById("qText"),
-      a: [
-        document.getElementById("a0"),
-        document.getElementById("a1"),
-        document.getElementById("a2"),
-        document.getElementById("a3"),
-      ],
-      answersWrap: document.getElementById("answers"),
-      catPill: document.getElementById("catPill"),
-      phasePill: document.getElementById("phasePill"),
-      bar: document.getElementById("bar"),
-      rightNote: document.getElementById("rightNote"),
+    const STORAGE_KEY = "dcbyron_trivia_state_v2";
+
+    const elQ = document.getElementById("questionText");
+    const elAnsWrap = document.getElementById("answers");
+    const elCat = document.getElementById("categoryChip");
+    const elCount = document.getElementById("counterChip");
+    const elMeta = document.getElementById("metaLine");
+    const elBar = document.getElementById("barFill");
+
+    const letters = ["A","B","C","D"];
+
+    const SETTINGS = {
+      thinkMs: 9000,     // time before reveal
+      revealMs: 2500,    // time answer stays highlighted
+      tickMs: 50
     };
 
-    const ANSWER_LETTERS = ["A","B","C","D"];
-
     function mulberry32(seed){
-      let a = seed >>> 0;
       return function(){
-        a += 0x6D2B79F5;
-        let t = Math.imul(a ^ (a >>> 15), 1 | a);
-        t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+        let t = seed += 0x6D2B79F5;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
         return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-      };
+      }
     }
 
     function shuffleInPlace(arr, rnd){
@@ -256,142 +256,163 @@
         const j = Math.floor(rnd() * (i + 1));
         [arr[i], arr[j]] = [arr[j], arr[i]];
       }
-      return arr;
+    }
+
+    function loadState(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return null;
+        return JSON.parse(raw);
+      }catch{
+        return null;
+      }
+    }
+
+    function saveState(state){
+      try{
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }catch{}
     }
 
     function normalizeQuestion(q){
-      if (!q) return null;
-      if (typeof q.question !== "string") return null;
-      if (!Array.isArray(q.answers) || q.answers.length !== 4) return null;
+      // Expected shape:
+      // { category: "Science", question: "...", answers: ["a","b","c","d"], correct: 2 }
+      // We defensively normalize.
+      const category = String(q.category || "Trivia").trim() || "Trivia";
+      const question = String(q.question || "").trim();
+      const answersRaw = Array.isArray(q.answers) ? q.answers.slice(0,4) : [];
+      const answers = answersRaw.map(x => String(x).trim());
 
-      const correct = Number(q.correct);
-      if (!Number.isInteger(correct) || correct < 0 || correct > 3) return null;
-
-      const answers = q.answers.map(x => (typeof x === "string" ? x.trim() : ""));
-      if (answers.some(x => !x)) return null;
-
-      const dedupe = new Set(answers.map(x => x.toLowerCase()));
-      if (dedupe.size !== 4) return null;
-
-      const category = (typeof q.category === "string" && q.category.trim()) ? q.category.trim() : "Trivia";
-
-      return {
-        category,
-        question: q.question.trim(),
-        answers,
-        correct
-      };
-    }
-
-    function buildDeck(){
-      const raw = Array.isArray(window.TRIVIA_BANK) ? window.TRIVIA_BANK : [];
-      const cleaned = [];
-      for (const item of raw){
-        const n = normalizeQuestion(item);
-        if (n) cleaned.push(n);
+      // If answers are missing or not 4, fail safe
+      if(question.length < 2 || answers.length !== 4 || answers.some(a => a.length < 1)){
+        return null;
       }
 
-      const seed = Math.floor(Date.now() / 60000);
-      const rnd = mulberry32(seed);
-      shuffleInPlace(cleaned, rnd);
+      let correct = Number.isInteger(q.correct) ? q.correct : 0;
+      if(correct < 0 || correct > 3) correct = 0;
 
-      return cleaned;
+      return { category, question, answers, correct };
     }
 
-    let deck = [];
-    let index = 0;
+    function buildRotation(bank){
+      const state = loadState();
+      const total = bank.length;
 
-    let progressTimer = null;
-    let phaseTimer = null;
-    let startTime = 0;
+      // If state is missing or from a different bank size, reset safely.
+      if(!state || state.total !== total || !Array.isArray(state.order) || state.order.length !== total){
+        const seed = Date.now() ^ (Math.random() * 1e9 | 0);
+        const rnd = mulberry32(seed);
+        const order = Array.from({length: total}, (_, i) => i);
+        shuffleInPlace(order, rnd);
 
-    function clearTimers(){
-      if (progressTimer) clearInterval(progressTimer);
-      if (phaseTimer) clearTimeout(phaseTimer);
-      progressTimer = null;
-      phaseTimer = null;
-    }
-
-    function setPhase(isQuestion){
-      els.phasePill.textContent = isQuestion ? "Question" : "Answer";
-      els.rightNote.textContent = isQuestion ? "Reveal soon" : "Answer";
-    }
-
-    function clearHighlights(){
-      const cards = els.answersWrap.querySelectorAll(".ans");
-      cards.forEach(c => c.classList.remove("correct", "wrong"));
-    }
-
-    function render(q){
-      els.catPill.textContent = q.category;
-      els.qText.textContent = q.question;
-      for (let i = 0; i < 4; i++){
-        els.a[i].textContent = q.answers[i];
+        const newState = { total, seed, order, pos: 0 };
+        saveState(newState);
+        return newState;
       }
+
+      // Guard pos
+      if(typeof state.pos !== "number" || state.pos < 0 || state.pos >= total) state.pos = 0;
+      return state;
     }
 
-    function reveal(q){
-      clearHighlights();
-      const cards = els.answersWrap.querySelectorAll(".ans");
-      cards.forEach((c, i) => {
-        if (i === q.correct) c.classList.add("correct");
-        else c.classList.add("wrong");
+    function getNextQuestion(bank, rot){
+      const idx = rot.order[rot.pos];
+      rot.pos = (rot.pos + 1) % rot.total;
+      saveState(rot);
+      return normalizeQuestion(bank[idx]);
+    }
+
+    function clearAnswerClasses(){
+      const items = elAnsWrap.querySelectorAll(".answer");
+      items.forEach(x => {
+        x.classList.remove("correct");
+        x.classList.remove("wrong");
       });
     }
 
-    function step(){
-      clearTimers();
+    function renderQuestion(q, countText){
+      elQ.textContent = q.question;
+      elCat.textContent = q.category;
+      elCount.textContent = countText;
 
-      if (!deck.length){
-        deck = buildDeck();
-        index = 0;
+      const items = elAnsWrap.querySelectorAll(".answer");
+      items.forEach((node, i) => {
+        node.querySelector(".badge").textContent = letters[i];
+        node.querySelector(".answerText").textContent = q.answers[i];
+      });
+
+      elMeta.textContent = "Automated rotation through full bank";
+    }
+
+    let progressTimer = null;
+
+    function runCycle(bank, rot){
+      let q = null;
+
+      // Pull until we get a valid normalized question
+      for(let tries = 0; tries < 20; tries++){
+        const candidate = getNextQuestion(bank, rot);
+        if(candidate){
+          q = candidate;
+          break;
+        }
       }
 
-      if (!deck.length){
-        els.qText.textContent = "No valid questions loaded";
-        els.catPill.textContent = "Error";
-        setPhase(true);
+      if(!q){
+        elQ.textContent = "Question bank error";
+        elMeta.textContent = "Could not load a valid question";
         return;
       }
 
-      if (index >= deck.length){
-        deck = buildDeck();
-        index = 0;
-      }
+      const total = rot.total;
+      const shown = rot.pos === 0 ? total : rot.pos;
+      renderQuestion(q, `${shown} of ${total}`);
+      clearAnswerClasses();
 
-      const q = deck[index];
-      index++;
+      // Progress bar
+      if(progressTimer) clearInterval(progressTimer);
+      elBar.style.width = "0%";
 
-      clearHighlights();
-      render(q);
-      setPhase(true);
-
-      startTime = Date.now();
-      els.bar.style.width = "0%";
-
+      const start = Date.now();
       progressTimer = setInterval(() => {
-        const t = Date.now() - startTime;
-        const pct = Math.min(100, (t / QUESTION_MS) * 100);
-        els.bar.style.width = pct.toFixed(2) + "%";
-      }, 80);
+        const elapsed = Date.now() - start;
+        const p = Math.min(1, elapsed / SETTINGS.thinkMs);
+        elBar.style.width = `${(p * 100).toFixed(2)}%`;
+        if(p >= 1) clearInterval(progressTimer);
+      }, SETTINGS.tickMs);
 
-      phaseTimer = setTimeout(() => {
+      // Reveal
+      setTimeout(() => {
         clearInterval(progressTimer);
-        progressTimer = null;
-        els.bar.style.width = "100%";
-        setPhase(false);
-        reveal(q);
+        elBar.style.width = "100%";
 
-        phaseTimer = setTimeout(() => {
-          step();
-        }, REVEAL_MS);
-      }, QUESTION_MS);
+        const items = elAnsWrap.querySelectorAll(".answer");
+        items.forEach((node, i) => {
+          if(i === q.correct) node.classList.add("correct");
+          else node.classList.add("wrong");
+        });
+
+        // Next question after reveal window
+        setTimeout(() => {
+          runCycle(bank, rot);
+        }, SETTINGS.revealMs);
+
+      }, SETTINGS.thinkMs);
     }
 
-    window.addEventListener("load", () => {
-      deck = buildDeck();
-      step();
-    });
+    function start(){
+      const bank = window.TRIVIA_BANK;
+      if(!Array.isArray(bank) || bank.length < 50){
+        elQ.textContent = "TRIVIA_BANK not found";
+        elMeta.textContent = "Check that questions.js loads and defines window.TRIVIA_BANK";
+        return;
+      }
+
+      const rot = buildRotation(bank);
+      runCycle(bank, rot);
+    }
+
+    start();
   </script>
 </body>
 </html>
