@@ -4,415 +4,397 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Derrick C Byron Cinematic 24/7 Trivia</title>
-
   <style>
     :root{
-      --panel-bg: rgba(25, 28, 35, 0.86);
-      --panel-border: rgba(255,255,255,0.14);
-      --text: rgba(255,255,255,0.92);
-      --muted: rgba(255,255,255,0.66);
-      --chip-bg: rgba(255,255,255,0.10);
-      --chip-border: rgba(255,255,255,0.14);
-      --answer-bg: rgba(255,255,255,0.07);
-      --answer-border: rgba(255,255,255,0.12);
-      --correct: rgba(55, 210, 130, 0.30);
-      --wrong: rgba(240, 80, 80, 0.26);
-      --correct-border: rgba(55, 210, 130, 0.60);
-      --wrong-border: rgba(240, 80, 80, 0.55);
-      --bar-bg: rgba(255,255,255,0.10);
-      --bar-fill-a: rgba(120, 200, 255, 0.92);
-      --bar-fill-b: rgba(180, 120, 255, 0.92);
-      --shadow: 0 16px 44px rgba(0,0,0,0.30);
-      --radius: 18px;
+      --bg:#0b0e14;
+      --card:#141a22;
+      --card2:#101621;
+      --text:#e9eef6;
+      --muted:#a9b4c6;
+      --line:rgba(255,255,255,.10);
+      --good:rgba(95, 225, 165, .22);
+      --bad:rgba(255, 95, 110, .18);
+      --goodLine:rgba(95, 225, 165, .55);
+      --badLine:rgba(255, 95, 110, .50);
     }
 
-    html, body {
-      height: 100%;
-      margin: 0;
-      background: transparent;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      color: var(--text);
-    }
-
+    html,body{height:100%; margin:0; background:transparent; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;}
     .wrap{
-      min-height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 28px;
-      box-sizing: border-box;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      box-sizing:border-box;
     }
-
     .panel{
-      width: min(1300px, 96vw);
-      background: var(--panel-bg);
-      border: 1px solid var(--panel-border);
-      box-shadow: var(--shadow);
-      border-radius: var(--radius);
-      padding: 22px 22px 18px 22px;
-      box-sizing: border-box;
+      width:min(1200px, 96vw);
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(20,26,34,.98), rgba(15,20,29,.98));
+      border:1px solid var(--line);
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+      overflow:hidden;
     }
-
     .top{
       display:flex;
       align-items:flex-start;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 10px;
+      justify-content:space-between;
+      gap:16px;
+      padding:18px 20px 10px 20px;
     }
-
     .brand{
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: 0.2px;
-      opacity: 0.95;
+      color:var(--muted);
+      font-size:14px;
+      letter-spacing:.2px;
+      line-height:1.2;
     }
-
     .sub{
-      margin-top: 4px;
-      font-size: 13px;
-      color: var(--muted);
-      letter-spacing: 0.25px;
+      color:rgba(233,238,246,.65);
+      font-size:12px;
+      margin-top:4px;
     }
-
     .chips{
       display:flex;
-      gap: 10px;
+      gap:10px;
       align-items:center;
-      flex-wrap: wrap;
-      justify-content: flex-end;
+      justify-content:flex-end;
+      flex-wrap:wrap;
     }
-
     .chip{
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: var(--chip-bg);
-      border: 1px solid var(--chip-border);
-      font-size: 12px;
-      color: rgba(255,255,255,0.80);
-      user-select: none;
-      white-space: nowrap;
+      color:rgba(233,238,246,.86);
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      user-select:none;
+      white-space:nowrap;
     }
 
-    .question{
-      font-size: clamp(30px, 3.6vw, 54px);
-      font-weight: 800;
-      line-height: 1.06;
-      margin: 10px 0 16px 0;
-      letter-spacing: 0.2px;
-      text-shadow: 0 2px 16px rgba(0,0,0,0.35);
+    .q{
+      padding:0 20px 10px 20px;
+      color:var(--text);
+      font-size:44px;
+      font-weight:800;
+      line-height:1.05;
+      letter-spacing:-.6px;
+      min-height:96px;
     }
 
     .answers{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 6px;
+      gap:12px;
+      padding:10px 20px 16px 20px;
     }
-
-    .answer{
-      background: var(--answer-bg);
-      border: 1px solid var(--answer-border);
-      border-radius: 14px;
-      padding: 14px 14px;
+    .ans{
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      padding:14px 14px;
+      color:rgba(233,238,246,.92);
       display:flex;
+      gap:12px;
       align-items:center;
-      gap: 12px;
-      min-height: 54px;
-      box-sizing: border-box;
+      font-size:18px;
+      min-height:56px;
+      box-sizing:border-box;
     }
-
     .badge{
-      width: 28px;
-      height: 28px;
-      border-radius: 10px;
+      width:28px;
+      height:28px;
+      border-radius:10px;
       display:flex;
       align-items:center;
       justify-content:center;
-      font-weight: 800;
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.14);
-      color: rgba(255,255,255,0.88);
-      flex: 0 0 auto;
+      font-weight:800;
+      font-size:12px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      flex:0 0 auto;
     }
-
-    .answerText{
-      font-size: 18px;
-      font-weight: 600;
-      color: rgba(255,255,255,0.86);
-      line-height: 1.15;
+    .ans.good{
+      background:linear-gradient(0deg, var(--good), rgba(255,255,255,.03));
+      border-color:var(--goodLine);
     }
-
-    .answer.correct{
-      background: var(--correct);
-      border-color: var(--correct-border);
-    }
-    .answer.wrong{
-      background: var(--wrong);
-      border-color: var(--wrong-border);
+    .ans.bad{
+      background:linear-gradient(0deg, var(--bad), rgba(255,255,255,.03));
+      border-color:var(--badLine);
     }
 
     .bottom{
+      padding:0 20px 18px 20px;
       display:flex;
       align-items:center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: 13px;
+      justify-content:space-between;
+      gap:12px;
     }
-
+    .hint{
+      color:rgba(233,238,246,.60);
+      font-size:12px;
+    }
     .bar{
-      flex: 1 1 auto;
-      height: 8px;
-      border-radius: 999px;
-      background: var(--bar-bg);
+      flex:1 1 auto;
+      height:8px;
+      border-radius:999px;
       overflow:hidden;
-      margin: 0 10px;
-      border: 1px solid rgba(255,255,255,0.10);
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
     }
-    .barFill{
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--bar-fill-a), var(--bar-fill-b));
-      border-radius: 999px;
+    .fill{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg, rgba(120,210,255,.85), rgba(200,120,255,.78));
+      border-radius:999px;
+    }
+    .soon{
+      color:rgba(233,238,246,.55);
+      font-size:12px;
+      white-space:nowrap;
     }
 
-    .hintLeft, .hintRight{
-      white-space: nowrap;
-      user-select:none;
+    .error{
+      padding:14px 20px 18px 20px;
+      color:rgba(255,255,255,.90);
+      font-size:14px;
+      border-top:1px solid var(--line);
+      background:rgba(255,95,110,.08);
+      display:none;
     }
-
-    @media (max-width: 760px){
-      .answers{ grid-template-columns: 1fr; }
-    }
+    .error b{color:rgba(255,95,110,.95)}
   </style>
 </head>
-
 <body>
   <div class="wrap">
     <div class="panel">
       <div class="top">
         <div>
           <div class="brand">Derrick C Byron Cinematic 24/7 Trivia</div>
-          <div class="sub" id="metaLine">Loading questions</div>
+          <div class="sub" id="statusLine">Loading questions</div>
         </div>
-
         <div class="chips">
-          <div class="chip" id="categoryChip">Category</div>
-          <div class="chip" id="counterChip">0 of 0</div>
+          <div class="chip" id="catChip">Category</div>
+          <div class="chip" id="countChip" style="display:none;">0 of 0</div>
         </div>
       </div>
 
-      <div class="question" id="questionText">Loading</div>
+      <div class="q" id="questionText">Loading</div>
 
       <div class="answers" id="answers">
-        <div class="answer"><div class="badge">A</div><div class="answerText">Loading</div></div>
-        <div class="answer"><div class="badge">B</div><div class="answerText">Loading</div></div>
-        <div class="answer"><div class="badge">C</div><div class="answerText">Loading</div></div>
-        <div class="answer"><div class="badge">D</div><div class="answerText">Loading</div></div>
+        <div class="ans"><div class="badge">A</div><div>Loading</div></div>
+        <div class="ans"><div class="badge">B</div><div>Loading</div></div>
+        <div class="ans"><div class="badge">C</div><div>Loading</div></div>
+        <div class="ans"><div class="badge">D</div><div>Loading</div></div>
       </div>
 
       <div class="bottom">
-        <div class="hintLeft" id="hintLeft">Answer in your head</div>
-        <div class="bar"><div class="barFill" id="barFill"></div></div>
-        <div class="hintRight" id="hintRight">Reveal soon</div>
+        <div class="hint">Answer in your head</div>
+        <div class="bar"><div class="fill" id="barFill"></div></div>
+        <div class="soon" id="soonText">Reveal soon</div>
       </div>
+
+      <div class="error" id="errorBox"></div>
     </div>
   </div>
 
-  <script src="./questions.js?v=3"></script>
+  <!-- IMPORTANT: bump v number when you change questions.js so GitHub Pages stops serving old cache -->
+  <script src="./questions.js?v=4"></script>
+
   <script>
-    // App logic lives here. questions.js only provides window.TRIVIA_BANK.
-
-    const STORAGE_KEY = "dcbyron_trivia_state_v3";
-
-    const elQ = document.getElementById("questionText");
-    const elAnsWrap = document.getElementById("answers");
-    const elCat = document.getElementById("categoryChip");
-    const elCount = document.getElementById("counterChip");
-    const elMeta = document.getElementById("metaLine");
-    const elBar = document.getElementById("barFill");
-
-    const letters = ["A","B","C","D"];
-
+    // Settings
     const SETTINGS = {
-      thinkMs: 9000,     // time before reveal
-      revealMs: 2500,    // time answer stays highlighted
+      thinkMs: 9000,
+      revealMs: 2500,
       tickMs: 50
     };
 
-    function mulberry32(seed){
-      return function(){
-        let t = seed += 0x6D2B79F5;
-        t = Math.imul(t ^ (t >>> 15), t | 1);
-        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-      }
+    // Turn this on only if you want viewers to see progress
+    const SHOW_COUNTER = true;
+
+    // Bump this when logic changes so old rotation state is discarded
+    const STORAGE_KEY = "dcbyron_trivia_state_v4";
+
+    const elQ = document.getElementById("questionText");
+    const elAnsWrap = document.getElementById("answers");
+    const elCat = document.getElementById("catChip");
+    const elCount = document.getElementById("countChip");
+    const elBar = document.getElementById("barFill");
+    const elSoon = document.getElementById("soonText");
+    const elStatus = document.getElementById("statusLine");
+    const elErr = document.getElementById("errorBox");
+
+    const letters = ["A","B","C","D"];
+
+    function showError(msg){
+      elErr.style.display = "block";
+      elErr.innerHTML = "<b>Problem</b><br>" + msg;
+      elStatus.textContent = "Error";
     }
 
-    function shuffleInPlace(arr, rnd){
+    function shuffle(arr){
       for (let i = arr.length - 1; i > 0; i--){
-        const j = Math.floor(rnd() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
+        const j = Math.floor(Math.random() * (i + 1));
+        const t = arr[i]; arr[i] = arr[j]; arr[j] = t;
       }
+      return arr;
     }
 
-    function loadState(){
-      try{
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if(!raw) return null;
-        return JSON.parse(raw);
-      }catch{
-        return null;
+    function safeParse(json, fallback){
+      try { return JSON.parse(json); } catch { return fallback; }
+    }
+
+    function buildNewOrder(n){
+      const order = Array.from({length:n}, (_,i)=>i);
+      shuffle(order);
+      return order;
+    }
+
+    function getState(n){
+      const saved = safeParse(localStorage.getItem(STORAGE_KEY) || "", null);
+      if (!saved || !Array.isArray(saved.order) || saved.order.length !== n || typeof saved.pos !== "number"){
+        return { order: buildNewOrder(n), pos: 0, lastIndex: -1, cycle: 1 };
       }
+      return saved;
     }
 
     function saveState(state){
-      try{
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      }catch{}
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
-    function normalizeQuestion(q){
-      // Expected shape:
-      // { category: "Science", question: "...", answers: ["a","b","c","d"], correct: 2 }
-      // We defensively normalize.
-      const category = String(q.category || "Trivia").trim() || "Trivia";
-      const question = String(q.question || "").trim();
-      const answersRaw = Array.isArray(q.answers) ? q.answers.slice(0,4) : [];
-      const answers = answersRaw.map(x => String(x).trim());
+    function nextQuestion(bank){
+      const n = bank.length;
+      let state = getState(n);
 
-      // If answers are missing or not 4, fail safe
-      if(question.length < 2 || answers.length !== 4 || answers.some(a => a.length < 1)){
-        return null;
+      // If cycle finished, reshuffle
+      if (state.pos >= n){
+        state.order = buildNewOrder(n);
+        state.pos = 0;
+        state.cycle = (state.cycle || 1) + 1;
       }
 
-      let correct = Number.isInteger(q.correct) ? q.correct : 0;
-      if(correct < 0 || correct > 3) correct = 0;
+      // Pick next index
+      let idx = state.order[state.pos];
 
-      return { category, question, answers, correct };
-    }
-
-    function buildRotation(bank){
-      const state = loadState();
-      const total = bank.length;
-
-      // If state is missing or from a different bank size, reset safely.
-      if(!state || state.total !== total || !Array.isArray(state.order) || state.order.length !== total){
-        const seed = Date.now() ^ (Math.random() * 1e9 | 0);
-        const rnd = mulberry32(seed);
-        const order = Array.from({length: total}, (_, i) => i);
-        shuffleInPlace(order, rnd);
-
-        const newState = { total, seed, order, pos: 0 };
-        saveState(newState);
-        return newState;
+      // Prevent back to back repeat
+      if (idx === state.lastIndex && state.pos + 1 < n){
+        const swapIdx = state.order[state.pos + 1];
+        state.order[state.pos] = swapIdx;
+        state.order[state.pos + 1] = idx;
+        idx = swapIdx;
       }
 
-      // Guard pos
-      if(typeof state.pos !== "number" || state.pos < 0 || state.pos >= total) state.pos = 0;
-      return state;
+      state.pos += 1;
+      state.lastIndex = idx;
+      saveState(state);
+
+      return {
+        q: bank[idx],
+        pos: state.pos,
+        total: n
+      };
     }
 
-    function getNextQuestion(bank, rot){
-      const idx = rot.order[rot.pos];
-      rot.pos = (rot.pos + 1) % rot.total;
-      saveState(rot);
-      return normalizeQuestion(bank[idx]);
+    function renderQuestion(q, pos, total){
+      elCat.textContent = q.category || "Category";
+
+      if (SHOW_COUNTER){
+        elCount.style.display = "";
+        elCount.textContent = pos + " of " + total;
+      } else {
+        elCount.style.display = "none";
+      }
+
+      elQ.textContent = q.question || "Question";
+      const answers = Array.isArray(q.answers) ? q.answers.slice(0,4) : ["A","B","C","D"];
+      const correct = typeof q.correct === "number" ? q.correct : 0;
+
+      elAnsWrap.innerHTML = "";
+      for (let i = 0; i < 4; i++){
+        const div = document.createElement("div");
+        div.className = "ans";
+        const b = document.createElement("div");
+        b.className = "badge";
+        b.textContent = letters[i];
+        const t = document.createElement("div");
+        t.textContent = answers[i] ?? "";
+        div.appendChild(b);
+        div.appendChild(t);
+        elAnsWrap.appendChild(div);
+      }
+
+      return correct;
     }
 
-    function clearAnswerClasses(){
-      const items = elAnsWrap.querySelectorAll(".answer");
-      items.forEach(x => {
-        x.classList.remove("correct");
-        x.classList.remove("wrong");
+    function clearHighlights(){
+      const items = elAnsWrap.querySelectorAll(".ans");
+      items.forEach(x => { x.classList.remove("good"); x.classList.remove("bad"); });
+    }
+
+    function reveal(correctIndex){
+      const items = elAnsWrap.querySelectorAll(".ans");
+      items.forEach((x, i) => {
+        if (i === correctIndex) x.classList.add("good");
+        else x.classList.add("bad");
       });
     }
 
-    function renderQuestion(q, countText){
-      elQ.textContent = q.question;
-      elCat.textContent = q.category;
-      elCount.textContent = countText;
-
-      const items = elAnsWrap.querySelectorAll(".answer");
-      items.forEach((node, i) => {
-        node.querySelector(".badge").textContent = letters[i];
-        node.querySelector(".answerText").textContent = q.answers[i];
-      });
-
-      elMeta.textContent = "Automated rotation through full bank";
+    function sleep(ms){
+      return new Promise(r => setTimeout(r, ms));
     }
 
-    let progressTimer = null;
+    async function loop(bank){
+      elStatus.textContent = "Automated rotation through full bank";
+      while (true){
+        clearHighlights();
+        elBar.style.width = "0%";
+        elSoon.textContent = "Reveal soon";
 
-    function runCycle(bank, rot){
-      let q = null;
+        const { q, pos, total } = nextQuestion(bank);
+        const correctIndex = renderQuestion(q, pos, total);
 
-      // Pull until we get a valid normalized question
-      for(let tries = 0; tries < 20; tries++){
-        const candidate = getNextQuestion(bank, rot);
-        if(candidate){
-          q = candidate;
-          break;
+        // Countdown bar
+        const start = Date.now();
+        while (Date.now() - start < SETTINGS.thinkMs){
+          const p = Math.min(1, (Date.now() - start) / SETTINGS.thinkMs);
+          elBar.style.width = (p * 100).toFixed(1) + "%";
+          await sleep(SETTINGS.tickMs);
         }
+
+        reveal(correctIndex);
+        elSoon.textContent = "Answer revealed";
+
+        await sleep(SETTINGS.revealMs);
       }
-
-      if(!q){
-        elQ.textContent = "Question bank error";
-        elMeta.textContent = "Could not load a valid question";
-        return;
-      }
-
-      const total = rot.total;
-      const shown = rot.pos === 0 ? total : rot.pos;
-      renderQuestion(q, `${shown} of ${total}`);
-      clearAnswerClasses();
-
-      // Progress bar
-      if(progressTimer) clearInterval(progressTimer);
-      elBar.style.width = "0%";
-
-      const start = Date.now();
-      progressTimer = setInterval(() => {
-        const elapsed = Date.now() - start;
-        const p = Math.min(1, elapsed / SETTINGS.thinkMs);
-        elBar.style.width = `${(p * 100).toFixed(2)}%`;
-        if(p >= 1) clearInterval(progressTimer);
-      }, SETTINGS.tickMs);
-
-      // Reveal
-      setTimeout(() => {
-        clearInterval(progressTimer);
-        elBar.style.width = "100%";
-
-        const items = elAnsWrap.querySelectorAll(".answer");
-        items.forEach((node, i) => {
-          if(i === q.correct) node.classList.add("correct");
-          else node.classList.add("wrong");
-        });
-
-        // Next question after reveal window
-        setTimeout(() => {
-          runCycle(bank, rot);
-        }, SETTINGS.revealMs);
-
-      }, SETTINGS.thinkMs);
     }
 
-    function start(){
-      const bank = window.TRIVIA_BANK;
-      if(!Array.isArray(bank) || bank.length < 50){
-        elQ.textContent = "TRIVIA_BANK not found";
-        elMeta.textContent = "Check that questions.js loads and defines window.TRIVIA_BANK";
-        return;
+    // Boot
+    (function init(){
+      // hard fail fast if questions.js never created the bank
+      const waitMs = 2500;
+      const t0 = Date.now();
+
+      function check(){
+        const bank = window.TRIVIA_BANK;
+        if (Array.isArray(bank) && bank.length > 0){
+          // sanity check for 2000
+          if (bank.length < 500){
+            showError("TRIVIA_BANK loaded but looks too small. It is " + bank.length + ". Your questions.js may not be generating the full bank.");
+            return;
+          }
+          loop(bank);
+          return;
+        }
+
+        if (Date.now() - t0 > waitMs){
+          showError("TRIVIA_BANK is not available. That means questions.js did not load or it crashed. Open this URL in a new tab and tell me if it loads or 404s: /Trivia-overlay/questions.js");
+          return;
+        }
+
+        requestAnimationFrame(check);
       }
 
-      const rot = buildRotation(bank);
-      runCycle(bank, rot);
-    }
-
-    start();
+      check();
+    })();
   </script>
 </body>
 </html>
