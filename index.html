@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>DCB 24/7 Trivia</title>
+<style>
+body{
+  margin:0;
+  background:transparent;
+  font-family:system-ui, -apple-system, sans-serif;
+}
+.wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+}
+.panel{
+  width:90%;
+  max-width:1100px;
+  padding:30px;
+  border-radius:20px;
+  background:rgba(20,25,35,.85);
+  color:white;
+}
+.q{
+  font-size:42px;
+  font-weight:800;
+  margin-bottom:20px;
+}
+.answers{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.ans{
+  padding:14px;
+  border-radius:12px;
+  background:rgba(255,255,255,.08);
+}
+.good{ background:rgba(0,255,120,.25); }
+.bad{ background:rgba(255,80,80,.25); }
+.bar{
+  margin-top:20px;
+  height:8px;
+  background:rgba(255,255,255,.1);
+  border-radius:10px;
+  overflow:hidden;
+}
+.fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#78d2ff,#c878ff);
+}
+.top{
+  display:flex;
+  justify-content:space-between;
+  font-size:14px;
+  margin-bottom:10px;
+  opacity:.8;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="panel">
+<div class="top">
+<div>Derrick C Byron Cinematic Trivia</div>
+<div id="counter">Q 1</div>
+</div>
+<div class="q" id="question"></div>
+<div class="answers" id="answers"></div>
+<div class="bar"><div class="fill" id="bar"></div></div>
+</div>
+</div>
+
+<script>
+const QUESTIONS = [
+{q:"Which planet is known as the Red Planet?",a:["Mars","Venus","Jupiter","Saturn"],c:0},
+{q:"How many strings does a standard guitar have?",a:["6","4","8","5"],c:0},
+{q:"In what year did the Berlin Wall fall?",a:["1989","1975","1995","1961"],c:0},
+{q:"How many innings are in baseball?",a:["9","7","10","8"],c:0},
+{q:"Which element has symbol O?",a:["Oxygen","Gold","Iron","Silver"],c:0},
+{q:"Which galaxy do we live in?",a:["Milky Way","Andromeda","Orion","Sombrero"],c:0}
+];
+
+let index = 0;
+
+const qEl = document.getElementById("question");
+const aEl = document.getElementById("answers");
+const bar = document.getElementById("bar");
+const counter = document.getElementById("counter");
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function showQuestion(){
+  const item = QUESTIONS[index];
+  counter.textContent = "Q " + (index+1);
+  qEl.textContent = item.q;
+
+  const answers = item.a.map((t,i)=>({text:t,correct:i===item.c}));
+  shuffle(answers);
+
+  aEl.innerHTML="";
+  answers.forEach(ans=>{
+    const div=document.createElement("div");
+    div.className="ans";
+    div.textContent=ans.text;
+    if(ans.correct) div.dataset.correct="1";
+    aEl.appendChild(div);
+  });
+
+  runTimer();
+}
+
+function runTimer(){
+  bar.style.width="0%";
+  let start=Date.now();
+  let duration=9000;
+
+  function frame(){
+    let p=(Date.now()-start)/duration;
+    if(p>=1){
+      reveal();
+      setTimeout(next,2500);
+      return;
+    }
+    bar.style.width=(p*100)+"%";
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+function reveal(){
+  [...aEl.children].forEach(el=>{
+    if(el.dataset.correct==="1") el.classList.add("good");
+    else el.classList.add("bad");
+  });
+}
+
+function next(){
+  index++;
+  if(index>=QUESTIONS.length){
+    shuffle(QUESTIONS);
+    index=0;
+  }
+  showQuestion();
+}
+
+showQuestion();
+</script>
+</body>
+</html>
