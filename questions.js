@@ -402,3 +402,119 @@
   window.TRIVIA_BANK = expandBank(2000, "dcb_trivia_bank_v2");
 
 })();
+// --------------------
+// Post-process patch: dedupe + smarter wrong answers (numbers/years)
+// Paste at the very bottom of questions.js
+// --------------------
+(function () {
+  if (!Array.isArray(window.TRIVIA_BANK) || window.TRIVIA_BANK.length === 0) return;
+
+  // 1) Remove duplicates by category + normalized question text
+  const seen = new Set();
+  const deduped = [];
+  for (const q of window.TRIVIA_BANK) {
+    const cat = String(q.category || "Trivia").trim();
+    const text = String(q.question || "").toLowerCase().replace(/\s+/g, " ").trim();
+    if (!text) continue;
+    const key = cat + "|" + text;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    deduped.push(q);
+  }
+
+  // Helper: detect year / number
+  const isYear = (s) => {
+    const t = String(s).trim();
+    return /^\d{4}$/.test(t) && +t >= 1000 && +t <= 2100;
+  };
+  const isNum = (s) => {
+    const t = String(s).trim();
+    return /^-?\d+(\.\d+)?$/.test(t) && !isYear(t);
+  };
+
+  // Build pools from the bank (so wrong answers come from the same universe)
+  const yearPool = [];
+  const numPool = [];
+  for (const q of deduped) {
+    const a = Array.isArray(q.answers) ? q.answers : [];
+    for (const x of a) {
+      if (isYear(x)) yearPool.push(String(x).trim());
+      else if (isNum(x)) numPool.push(String(x).trim());
+    }
+  }
+
+  const uniq = (arr) => Array.from(new Set(arr));
+  const years = uniq(yearPool);
+  const nums = uniq(numPool);
+
+  // Generate nearby distractors
+  function yearDistractors(correct) {
+    const c = +correct;
+    const deltas = [1,2,3,5,7,10,12,15,20,25,30,40,50];
+    const out = [];
+    for (const d of deltas) {
+      const a = c + d, b = c - d;
+      if (out.length < 3 && a >= 1000 && a <= 2100) out.push(String(a));
+      if (out.length < 3 && b >= 1000 && b <= 2100) out.push(String(b));
+      if (out.length >= 3) break;
+    }
+    // fallback pool
+    for (const y of years) {
+      if (out.length >= 3) break;
+      if (y !== String(correct) && !out.includes(y)) out.push(y);
+    }
+    while (out.length < 3) out.push(String(1900 + Math.floor(Math.random()*150)));
+    return out.slice(0,3);
+  }
+
+  function numDistractors(correct) {
+    const c = +correct;
+    const deltas = [1,2,3,4,5,6,7,8,9,10,12,15];
+    const out = [];
+    for (const d of deltas) {
+      const a = c + d, b = c - d;
+      if (out.length < 3) out.push(String(a));
+      if (out.length < 3 && b >= 0) out.push(String(b));
+      if (out.length >= 3) break;
+    }
+    for (const n of nums) {
+      if (out.length >= 3) break;
+      if (n !== String(correct) && !out.includes(n)) out.push(n);
+    }
+    while (out.length < 3) out.push(String(Math.floor(Math.random()*20)));
+    return out.slice(0,3);
+  }
+
+  // 2) Fix “number vs words” and “year vs words” options
+  for (const q of deduped) {
+    if (!Array.isArray(q.answers) || q.answers.length !== 4) continue;
+    const correctIdx = Number.isInteger(q.correct) ? q.correct : 0;
+    const correct = q.answers[correctIdx];
+
+    if (isYear(correct)) {
+      const wrongs = yearDistractors(correct);
+      const all = [String(correct), ...wrongs];
+      // shuffle and re-index correct
+      for (let i = all.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [all[i], all[j]] = [all[j], all[i]];
+      }
+      q.answers = all;
+      q.correct = all.indexOf(String(correct));
+    } else if (isNum(correct)) {
+      const wrongs = numDistractors(correct);
+      const all = [String(correct), ...wrongs];
+      for (let i = all.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [all[i], all[j]] = [all[j], all[i]];
+      }
+      q.answers = all;
+      q.correct = all.indexOf(String(correct));
+    }
+  }
+
+  // 3) Ensure we still have up to 2000 items.
+  // If dedupe reduced it, we keep cycling unique ones (still far better than repeats).
+  // We'll cap at 2000 so your counter stays consistent.
+  window.TRIVIA_BANK = deduped.slice(0, 2000);
+})();
