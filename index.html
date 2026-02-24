@@ -1,196 +1,152 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>Derrick C Byron Cinematic 24/7 Trivia</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Derrick C Byron Cinematic 24 7 Trivia</title>
 
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-
 body {
-  width:100vw;
-  height:100vh;
-  background: transparent;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+    margin:0;
+    padding:0;
+    background:transparent;
+    font-family: 'Segoe UI', sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
 }
 
-.overlay {
-  width:80%;
-  max-width:1500px;
-  padding:60px;
-  border-radius:28px;
-  background: rgba(18,18,28,0.78);
-  backdrop-filter: blur(18px);
-  border:1px solid rgba(255,255,255,0.08);
-  box-shadow:0 40px 100px rgba(0,0,0,0.55);
+.container {
+    width:90%;
+    max-width:1100px;
+    padding:40px;
+    border-radius:20px;
+    backdrop-filter: blur(20px);
+    background: rgba(20,20,30,0.75);
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+    color:white;
 }
 
-.brand {
-  font-size:22px;
-  letter-spacing:3px;
-  color:#7da2ff;
-  margin-bottom:10px;
+.header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
 }
 
 .title {
-  font-size:58px;
-  font-weight:700;
-  line-height:1.2;
-  color:rgba(255,255,255,0.97);
-  text-shadow:0 4px 18px rgba(0,0,0,0.6);
-  margin-bottom:40px;
-}
-
-.answers {
-  list-style:none;
-  margin-bottom:40px;
-}
-
-.answers li {
-  font-size:28px;
-  padding:20px 25px;
-  margin-bottom:15px;
-  border-radius:14px;
-  background: rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.08);
-  color:white;
-  transition:all .3s ease;
-}
-
-.answers li.correct {
-  background: rgba(80,255,160,0.25);
-  border:1px solid rgba(80,255,160,0.6);
-}
-
-.meta {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:18px;
-  color:rgba(255,255,255,0.75);
-  margin-bottom:10px;
-}
-
-.progress-bar {
-  height:10px;
-  border-radius:10px;
-  background:rgba(255,255,255,0.08);
-  overflow:hidden;
-}
-
-.progress {
-  height:100%;
-  width:0%;
-  background: linear-gradient(90deg,#7da2ff,#b07dff);
-  transition:width .1s linear;
+    font-size:18px;
+    letter-spacing:1px;
+    opacity:0.7;
 }
 
 .category {
-  background: rgba(125,162,255,0.18);
-  padding:8px 16px;
-  border-radius:30px;
-  font-size:14px;
-  letter-spacing:1px;
+    padding:6px 14px;
+    background:rgba(255,255,255,0.1);
+    border-radius:20px;
+    font-size:14px;
+}
+
+.question {
+    font-size:42px;
+    font-weight:700;
+    margin:20px 0 30px 0;
+}
+
+.answers li {
+    list-style:none;
+    padding:16px;
+    margin:12px 0;
+    border-radius:12px;
+    background:rgba(255,255,255,0.08);
+    font-size:20px;
+}
+
+.correct {
+    background:rgba(0,255,150,0.25) !important;
+}
+
+.progress-bar {
+    height:8px;
+    border-radius:6px;
+    margin-top:30px;
+    background:linear-gradient(90deg,#4facfe,#a855f7);
+    width:0%;
 }
 </style>
 </head>
 
 <body>
 
-<div class="overlay">
-  <div class="meta">
-    <div>Derrick C Byron Cinematic 24 7 Trivia</div>
-    <div class="category" id="category"></div>
-  </div>
+<div class="container">
+    <div class="header">
+        <div class="title">Derrick C Byron Cinematic 24/7 Trivia</div>
+        <div class="category" id="category">Category</div>
+    </div>
 
-  <div class="title" id="question"></div>
+    <div class="question" id="question">Loading...</div>
 
-  <ul class="answers" id="answers"></ul>
+    <ul class="answers" id="answers"></ul>
 
-  <div class="progress-bar">
-    <div class="progress" id="progress"></div>
-  </div>
+    <div class="progress-bar" id="progress"></div>
 </div>
 
+<script src="questions.js"></script>
 <script>
 
-const QUESTION_TIME = 15000;
-
-const questions = [
-
-{category:"Space", q:"Which planet is known as the Red Planet?", a:["Mars","Jupiter","Venus","Mercury"], correct:0},
-{category:"Astronomy", q:"What galaxy do we live in?", a:["Andromeda","Milky Way","Whirlpool","Sombrero"], correct:1},
-{category:"Music", q:"Who was known as the King of Pop?", a:["Prince","Michael Jackson","Elvis Presley","Madonna"], correct:1},
-{category:"Film", q:"Which movie features the character Neo?", a:["Inception","The Matrix","Avatar","Tron"], correct:1},
-{category:"History", q:"In which year did World War II end?", a:["1943","1945","1947","1950"], correct:1},
-{category:"World Facts", q:"Which is the largest ocean on Earth?", a:["Atlantic","Pacific","Indian","Arctic"], correct:1},
-{category:"Science", q:"What is the chemical symbol for Oxygen?", a:["O","Ox","Og","Om"], correct:0},
-{category:"Geography", q:"Mount Everest lies on the border of Nepal and which country?", a:["China","India","Bhutan","Pakistan"], correct:0},
-{category:"Film", q:"Who directed Titanic?", a:["James Cameron","Spielberg","Nolan","Scott"], correct:0},
-{category:"Music", q:"Which band released Dark Side of the Moon?", a:["Pink Floyd","Beatles","Queen","U2"], correct:0}
-
-];
-
 let current = 0;
-let timer;
 let progressInterval;
+const duration = 10000;
 
 function showQuestion() {
+    const q = TRIVIA_BANK[current];
+    document.getElementById("question").textContent = q.question;
+    document.getElementById("category").textContent = q.category;
 
-const q = questions[current];
+    const answers = document.getElementById("answers");
+    answers.innerHTML = "";
 
-document.getElementById("category").innerText = q.category;
-document.getElementById("question").innerText = q.q;
+    q.answers.forEach((ans,index)=>{
+        const li = document.createElement("li");
+        li.textContent = String.fromCharCode(65+index) + ". " + ans;
+        answers.appendChild(li);
+    });
 
-const answersEl = document.getElementById("answers");
-answersEl.innerHTML = "";
-
-q.a.forEach((text,i)=>{
-  const li = document.createElement("li");
-  li.innerText = String.fromCharCode(65+i)+". "+text;
-  answersEl.appendChild(li);
-});
-
-startTimer();
+    startTimer();
 }
 
 function startTimer() {
+    const progress = document.getElementById("progress");
+    progress.style.width = "0%";
 
-let time = 0;
-const progress = document.getElementById("progress");
-progress.style.width = "0%";
+    let elapsed = 0;
+    clearInterval(progressInterval);
 
-progressInterval = setInterval(()=>{
-  time += 100;
-  progress.style.width = (time/QUESTION_TIME*100)+"%";
-},100);
+    progressInterval = setInterval(()=>{
+        elapsed += 100;
+        progress.style.width = (elapsed/duration)*100 + "%";
 
-timer = setTimeout(()=>{
-  revealAnswer();
-},QUESTION_TIME);
-
+        if(elapsed >= duration){
+            clearInterval(progressInterval);
+            revealAnswer();
+        }
+    },100);
 }
 
-function revealAnswer() {
+function revealAnswer(){
+    const items = document.querySelectorAll(".answers li");
+    items[TRIVIA_BANK[current].correct].classList.add("correct");
 
-clearInterval(progressInterval);
-
-const items = document.querySelectorAll(".answers li");
-items[questions[current].correct].classList.add("correct");
-
-setTimeout(()=>{
-  current = (current+1)%questions.length;
-  showQuestion();
-},4000);
-
+    setTimeout(()=>{
+        current = (current + 1) % TRIVIA_BANK.length;
+        showQuestion();
+    },4000);
 }
 
 showQuestion();
 
 </script>
+
 </body>
 </html>
