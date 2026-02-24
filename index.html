@@ -3,535 +3,758 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Derrick C Byron Cinematic Trivia</title>
+  <title>Derrick C Byron Cinematic 24/7 Trivia</title>
   <style>
     :root{
-      --bg: rgba(16,18,24,.78);
-      --panel: rgba(255,255,255,.06);
-      --panel2: rgba(255,255,255,.09);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.62);
-      --good: rgba(46, 204, 113, .35);
-      --bad: rgba(231, 76, 60, .28);
-      --line: rgba(255,255,255,.10);
+      --bg:#0b0f14;
+      --card:#121923;
+      --card2:#0f1620;
+      --text:#eaf0ff;
+      --muted:#a9b3c9;
+      --chip:#1b2535;
+      --border:rgba(255,255,255,.08);
+      --good:#20c05c;
+      --bad:#d44848;
+      --shadow:0 18px 55px rgba(0,0,0,.55);
+      --r:22px;
     }
-    html,body{height:100%; margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: transparent;}
-    .wrap{height:100%; display:flex; align-items:center; justify-content:center; padding:24px;}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: radial-gradient(1200px 600px at 50% 60%, rgba(88,120,255,.12), transparent 55%),
+                  radial-gradient(900px 500px at 70% 20%, rgba(0,255,200,.08), transparent 55%),
+                  radial-gradient(900px 500px at 30% 20%, rgba(255,0,140,.08), transparent 55%),
+                  linear-gradient(180deg, #0a0e14, #06080c);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+      box-sizing:border-box;
+    }
+    .wrap{width:min(1250px, 100%);}
     .card{
-      width:min(1300px, 96vw);
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.35);
-      backdrop-filter: blur(10px);
+      border:1px solid var(--border);
+      border-radius:var(--r);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       overflow:hidden;
     }
+    .inner{padding:22px 24px 18px 24px;}
     .top{
-      padding:16px 18px 10px;
       display:flex;
-      align-items:flex-start;
+      align-items:center;
       justify-content:space-between;
       gap:12px;
+      margin-bottom:6px;
     }
     .brand{
-      display:flex; flex-direction:column; gap:4px;
-      color: var(--muted);
-      font-size: 14px;
+      font-weight:800;
       letter-spacing:.2px;
-      user-select:none;
+      color:#dfe8ff;
+      font-size:16px;
+      opacity:.95;
     }
-    .brand b{color:var(--text); font-size:16px; font-weight:700;}
-    .chips{display:flex; gap:10px; align-items:center;}
+    .sub{
+      margin-top:2px;
+      color:var(--muted);
+      font-size:12px;
+      opacity:.95;
+    }
+    .chips{display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
     .chip{
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 999px;
-      padding: 6px 10px;
-      color: rgba(255,255,255,.85);
-      font-size: 12px;
-      user-select:none;
+      font-size:12px;
+      padding:7px 11px;
+      border-radius:999px;
+      background:rgba(0,0,0,.25);
+      border:1px solid var(--border);
+      color:#d7e3ff;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
       white-space:nowrap;
     }
+    .chip b{font-weight:800}
     .q{
-      padding: 0 18px 14px;
-      color: var(--text);
-      font-weight: 800;
-      font-size: clamp(22px, 3.2vw, 48px);
-      line-height: 1.05;
-      letter-spacing: -.5px;
-      text-shadow: 0 2px 18px rgba(0,0,0,.35);
+      margin:12px 0 16px 0;
+      font-size:52px;
+      line-height:1.05;
+      font-weight:900;
+      letter-spacing:-.6px;
+      text-shadow:0 10px 26px rgba(0,0,0,.45);
+    }
+    @media (max-width:900px){
+      .q{font-size:34px}
     }
     .grid{
       display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px 14px;
-      padding: 0 18px 14px;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width:780px){
+      .grid{grid-template-columns:1fr}
     }
     .ans{
-      display:flex; align-items:center; gap:10px;
-      padding: 14px 14px;
-      border-radius: 12px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.09);
-      color: rgba(255,255,255,.88);
-      font-size: clamp(14px, 1.5vw, 18px);
-      user-select:none;
-    }
-    .ans .letter{
-      width:28px; height:28px;
-      display:flex; align-items:center; justify-content:center;
-      border-radius: 8px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.12);
-      font-weight: 800;
-      color: rgba(255,255,255,.85);
-      flex: 0 0 auto;
-    }
-    .ans.good{background: var(--good); border-color: rgba(46,204,113,.55);}
-    .ans.bad{background: var(--bad); border-color: rgba(231,76,60,.55);}
-    .bottom{
-      padding: 10px 18px 16px;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-    .bar{
-      height: 8px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.10);
+      position:relative;
+      border-radius:16px;
+      background:rgba(0,0,0,.22);
+      border:1px solid var(--border);
+      padding:14px 16px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-height:52px;
+      box-sizing:border-box;
       overflow:hidden;
-      flex: 1 1 auto;
+    }
+    .badge{
+      width:28px; height:28px;
+      display:grid; place-items:center;
+      border-radius:10px;
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--border);
+      color:#dce6ff;
+      font-weight:900;
+      flex:0 0 auto;
+    }
+    .txt{
+      font-size:16px;
+      font-weight:750;
+      color:#eaf0ff;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .ans.good{border-color:rgba(32,192,92,.55); box-shadow: 0 0 0 2px rgba(32,192,92,.15) inset;}
+    .ans.bad{border-color:rgba(212,72,72,.55); box-shadow: 0 0 0 2px rgba(212,72,72,.12) inset; opacity:.95;}
+    .bottom{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-top:14px;
+    }
+    .hint{color:var(--muted); font-size:12px;}
+    .bar{
+      width:100%;
+      height:10px;
+      border-radius:999px;
+      background:rgba(0,0,0,.28);
+      border:1px solid var(--border);
+      overflow:hidden;
     }
     .fill{
       height:100%;
       width:0%;
-      background: linear-gradient(90deg, rgba(120,220,255,.85), rgba(176,120,255,.9));
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(79,183,255,.95), rgba(167,103,255,.95), rgba(255,90,190,.95));
+      transition:width 80ms linear;
     }
-    .rightHint{white-space:nowrap;}
-    .tiny{font-size:12px; color: rgba(255,255,255,.52);}
+    .rightHint{color:var(--muted); font-size:12px; white-space:nowrap;}
   </style>
 </head>
-
 <body>
   <div class="wrap">
     <div class="card">
-      <div class="top">
-        <div class="brand">
-          <b>Derrick C Byron Cinematic Trivia</b>
-          <div class="tiny" id="subline">Automated rotation through full bank</div>
+      <div class="inner">
+        <div class="top">
+          <div>
+            <div class="brand">Derrick C Byron Cinematic 24/7 Trivia</div>
+            <div class="sub" id="subline">Automated rotation through full bank</div>
+          </div>
+          <div class="chips">
+            <div class="chip"><span id="catChip">Loading</span></div>
+            <div class="chip"><b id="countChip">0</b><span id="countOf">of 0</span></div>
+          </div>
         </div>
-        <div class="chips">
-          <div class="chip" id="catChip">Category</div>
-          <div class="chip" id="countChip">1 of 2000</div>
+
+        <div class="q" id="questionText">Loading</div>
+
+        <div class="grid" id="answers">
+          <div class="ans"><div class="badge">A</div><div class="txt">Loading</div></div>
+          <div class="ans"><div class="badge">B</div><div class="txt">Loading</div></div>
+          <div class="ans"><div class="badge">C</div><div class="txt">Loading</div></div>
+          <div class="ans"><div class="badge">D</div><div class="txt">Loading</div></div>
         </div>
-      </div>
 
-      <div class="q" id="qText">Loading</div>
-
-      <div class="grid" id="answers">
-        <div class="ans"><div class="letter">A</div><div>Loading</div></div>
-        <div class="ans"><div class="letter">B</div><div>Loading</div></div>
-        <div class="ans"><div class="letter">C</div><div>Loading</div></div>
-        <div class="ans"><div class="letter">D</div><div>Loading</div></div>
-      </div>
-
-      <div class="bottom">
-        <div>Answer in your head</div>
-        <div class="bar"><div class="fill" id="barFill"></div></div>
-        <div class="rightHint" id="hint">Reveal soon</div>
+        <div class="bottom">
+          <div class="hint" id="metaLine">Answer in your head</div>
+          <div class="bar"><div class="fill" id="barFill"></div></div>
+          <div class="rightHint" id="rightLine">Reveal soon</div>
+        </div>
       </div>
     </div>
   </div>
 
 <script>
-;(() => {
-  // Settings you can change
+(() => {
+  const STORAGE_KEY = "dcbyron_trivia_state_v4";
+
   const SETTINGS = {
-    totalQuestions: 2000,     // raise this if you want more
-    avoidRepeatWindow: 80,    // prevents near repeats
-    thinkMs: 9000,            // time before reveal
-    revealMs: 2500,           // time answer stays shown
-    tickMs: 50,               // bar smoothness
-    seedSalt: "dcbyron_trivia_bank_v1", // change this when you want a fresh reshuffle
-    showCounter: true,        // true shows 1 of 2000
-    showCategory: true        // true shows category
+    totalQuestions: 2000,
+    thinkMs: 9000,
+    revealMs: 2500,
+    tickMs: 50,
+    noImmediateRepeat: true
   };
 
-  // Storage key, change v1 to v2 v3 when you want to reset history cleanly
-  const STORAGE_KEY = "dcbyron_trivia_state_v1";
-
-  // Safe datasets
-  const ELEMENTS = [
-    {name:"Hydrogen", symbol:"H"},{name:"Helium", symbol:"He"},{name:"Lithium", symbol:"Li"},{name:"Beryllium", symbol:"Be"},
-    {name:"Boron", symbol:"B"},{name:"Carbon", symbol:"C"},{name:"Nitrogen", symbol:"N"},{name:"Oxygen", symbol:"O"},
-    {name:"Fluorine", symbol:"F"},{name:"Neon", symbol:"Ne"},{name:"Sodium", symbol:"Na"},{name:"Magnesium", symbol:"Mg"},
-    {name:"Aluminum", symbol:"Al"},{name:"Silicon", symbol:"Si"},{name:"Phosphorus", symbol:"P"},{name:"Sulfur", symbol:"S"},
-    {name:"Chlorine", symbol:"Cl"},{name:"Argon", symbol:"Ar"},{name:"Potassium", symbol:"K"},{name:"Calcium", symbol:"Ca"},
-    {name:"Iron", symbol:"Fe"},{name:"Copper", symbol:"Cu"},{name:"Silver", symbol:"Ag"},{name:"Gold", symbol:"Au"},
-    {name:"Tin", symbol:"Sn"},{name:"Iodine", symbol:"I"},{name:"Lead", symbol:"Pb"},{name:"Mercury", symbol:"Hg"}
-  ];
-
-  const PLANETS = ["Mercury","Venus","Earth","Mars","Jupiter","Saturn","Uranus","Neptune"];
-
-  const CAPITALS = [
-    {country:"United States", capital:"Washington, D.C."},
-    {country:"Canada", capital:"Ottawa"},
-    {country:"Mexico", capital:"Mexico City"},
-    {country:"Brazil", capital:"Brasília"},
-    {country:"Argentina", capital:"Buenos Aires"},
-    {country:"United Kingdom", capital:"London"},
-    {country:"France", capital:"Paris"},
-    {country:"Germany", capital:"Berlin"},
-    {country:"Italy", capital:"Rome"},
-    {country:"Spain", capital:"Madrid"},
-    {country:"Portugal", capital:"Lisbon"},
-    {country:"Netherlands", capital:"Amsterdam"},
-    {country:"Belgium", capital:"Brussels"},
-    {country:"Switzerland", capital:"Bern"},
-    {country:"Austria", capital:"Vienna"},
-    {country:"Poland", capital:"Warsaw"},
-    {country:"Greece", capital:"Athens"},
-    {country:"Turkey", capital:"Ankara"},
-    {country:"Russia", capital:"Moscow"},
-    {country:"China", capital:"Beijing"},
-    {country:"Japan", capital:"Tokyo"},
-    {country:"South Korea", capital:"Seoul"},
-    {country:"India", capital:"New Delhi"},
-    {country:"Australia", capital:"Canberra"},
-    {country:"New Zealand", capital:"Wellington"},
-    {country:"Egypt", capital:"Cairo"},
-    {country:"South Africa", capital:"Pretoria"},
-    {country:"Nigeria", capital:"Abuja"},
-    {country:"Saudi Arabia", capital:"Riyadh"},
-    {country:"United Arab Emirates", capital:"Abu Dhabi"}
-  ];
-
-  const TECH_PRODUCTS = [
-    {product:"the iPhone", company:"Apple"},
-    {product:"Windows", company:"Microsoft"},
-    {product:"Android", company:"Google"},
-    {product:"PlayStation", company:"Sony"},
-    {product:"Xbox", company:"Microsoft"},
-    {product:"the Kindle", company:"Amazon"},
-    {product:"the Galaxy phone line", company:"Samsung"},
-    {product:"the Switch", company:"Nintendo"},
-    {product:"the iPad", company:"Apple"},
-    {product:"the Mac", company:"Apple"}
-  ];
-
-  const SPORTS_FACTS = [
-    {q:"How many players are on the field for one soccer team", a:11},
-    {q:"How many points is a touchdown worth in American football", a:6},
-    {q:"How many quarters are in an NBA game", a:4},
-    {q:"How many innings are in a standard baseball game", a:9},
-    {q:"How many players are on the court per basketball team", a:5},
-    {q:"How many sets must you win to take a best of five tennis match", a:3},
-    {q:"How many rings are on the Olympic flag", a:5}
-  ];
-
-  const HISTORY_EVENTS = [
-    {event:"the Berlin Wall fall", year:1989},
-    {event:"the first moon landing", year:1969},
-    {event:"World War II end in Europe", year:1945},
-    {event:"the Declaration of Independence be adopted", year:1776},
-    {event:"the Titanic sink", year:1912},
-    {event:"the United Nations be founded", year:1945},
-    {event:"the first iPhone release", year:2007}
-  ];
-
-  const MOVIE_TRIVIA = [
-    {q:"Which movie features the quote I will be back", a:"The Terminator", wrong:["Titanic","Jaws","Rocky"]},
-    {q:"Which movie is about a giant shark attacking a beach town", a:"Jaws", wrong:["Alien","Gladiator","Inception"]},
-    {q:"Which movie is set on the ship Titanic", a:"Titanic", wrong:["Avatar","The Matrix","The Godfather"]},
-    {q:"Which movie features a character named Darth Vader", a:"Star Wars", wrong:["Rocky","E.T.","Jurassic Park"]},
-    {q:"Which movie features dinosaurs brought back to life in a theme park", a:"Jurassic Park", wrong:["Frozen","Interstellar","The Dark Knight"]},
-    {q:"Which movie features a superhero named Batman", a:"The Dark Knight", wrong:["Toy Story","Shrek","Finding Nemo"]},
-    {q:"Which movie is about dreams within dreams", a:"Inception", wrong:["Home Alone","Grease","The Lion King"]},
-    {q:"Which movie features a ring that must be destroyed in Mordor", a:"The Lord of the Rings", wrong:["Harry Potter","Spider Man","Indiana Jones"]}
-  ];
-
-  const MUSIC_TRIVIA = [
-    {q:"Which instrument typically has 88 keys", a:"Piano", wrong:["Guitar","Trumpet","Drums"]},
-    {q:"Which instrument is played with a bow and has four strings", a:"Violin", wrong:["Flute","Trombone","Tuba"]},
-    {q:"Which term means very fast tempo", a:"Presto", wrong:["Largo","Adagio","Andante"]},
-    {q:"Which term means slowly", a:"Adagio", wrong:["Allegro","Presto","Vivace"]},
-    {q:"Which family does the flute belong to", a:"Woodwind", wrong:["Brass","String","Percussion"]},
-    {q:"Which family does the trumpet belong to", a:"Brass", wrong:["Woodwind","String","Percussion"]},
-    {q:"Which family does the drum set belong to", a:"Percussion", wrong:["Brass","Woodwind","String"]}
-  ];
-
-  // Utilities
-  function mulberry32(seed){
-    return function(){
-      let t = seed += 0x6D2B79F5;
+  function mulberry32(seed) {
+    return function() {
+      let t = (seed += 0x6D2B79F5);
       t = Math.imul(t ^ (t >>> 15), t | 1);
       t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
   }
-  function hashToSeed(str){
-    let h = 2166136261;
-    for (let i=0;i<str.length;i++){
+
+  function hashStringToSeed(str) {
+    let h = 2166136261 >>> 0;
+    for (let i = 0; i < str.length; i++) {
       h ^= str.charCodeAt(i);
       h = Math.imul(h, 16777619);
     }
     return h >>> 0;
   }
-  function shuffle(arr, rnd){
-    for (let i=arr.length-1;i>0;i--){
-      const j = Math.floor(rnd()*(i+1));
-      [arr[i],arr[j]]=[arr[j],arr[i]];
+
+  function shuffleInPlace(arr, rnd) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(rnd() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     return arr;
   }
-  function pick(arr, rnd){ return arr[Math.floor(rnd()*arr.length)]; }
-  function uniq(arr){ return Array.from(new Set(arr)); }
-  function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
 
-  function makeAnswersTypeAware(correct, pool, rnd){
-    const isNum = typeof correct === "number";
-    if (isNum){
-      const c = correct;
-      const candidates = [];
-      const steps = [1,2,3,4,5,6,7,8,9,10,12,15,20,25,30,50];
-      for (let k=0;k<50;k++){
-        const step = pick(steps, rnd);
-        const sign = rnd() < 0.5 ? -1 : 1;
-        const v = c + sign * step;
-        if (v > 0 && v !== c) candidates.push(v);
+  function normalize(s) {
+    return String(s).trim().toLowerCase().replace(/\s+/g," ");
+  }
+
+  function isNumberLike(v) {
+    if (typeof v === "number") return true;
+    const s = String(v).trim();
+    return /^-?\d+(\.\d+)?$/.test(s);
+  }
+
+  function isYearLike(v) {
+    const s = String(v).trim();
+    if (!/^\d{4}$/.test(s)) return false;
+    const n = Number(s);
+    return n >= 1500 && n <= 2100;
+  }
+
+  function pick(arr, rnd) {
+    return arr[Math.floor(rnd() * arr.length)];
+  }
+
+  function uniq(arr) {
+    const seen = new Set();
+    const out = [];
+    for (const x of arr) {
+      const k = normalize(x);
+      if (seen.has(k)) continue;
+      seen.add(k);
+      out.push(x);
+    }
+    return out;
+  }
+
+  function makeWrongAnswers(correct, kind, rnd) {
+    const out = [];
+    const used = new Set([normalize(correct)]);
+    const cNum = Number(correct);
+
+    function add(v) {
+      const k = normalize(v);
+      if (used.has(k)) return false;
+      used.add(k);
+      out.push(String(v));
+      return true;
+    }
+
+    if (kind === "year") {
+      const base = Number(correct);
+      const deltas = [-30,-25,-20,-15,-12,-10,-8,-6,-4,-3,-2,2,3,4,6,8,10,12,15,20,25,30,40,50];
+      let guard = 0;
+      while (out.length < 3 && guard++ < 500) {
+        const d = pick(deltas, rnd);
+        const y = base + d;
+        if (y < 1500 || y > 2100) continue;
+        add(String(y));
       }
-      const wrongs = uniq(candidates).slice(0, 20);
-      while (wrongs.length < 8) wrongs.push(c + wrongs.length + 1);
-      const picks = shuffle(wrongs.slice(0), rnd).slice(0, 3);
-      const all = shuffle([c, ...picks], rnd).map(String);
-      return {answers: all, correctIndex: all.indexOf(String(c))};
-    } else {
-      const wrongs = shuffle(uniq(pool.filter(x => x && x !== correct)).slice(0), rnd).slice(0, 3);
-      while (wrongs.length < 3) wrongs.push("None of the above");
-      const all = shuffle([correct, ...wrongs], rnd);
-      return {answers: all, correctIndex: all.indexOf(correct)};
+      while (out.length < 3) add(String(base + (out.length+1)));
+      return out;
     }
-  }
 
-  function normalizeQuestionText(s){
-    return String(s).toLowerCase().replace(/\s+/g," ").trim();
-  }
-
-  // Question makers
-  function qScience(rnd){
-    const mode = rnd();
-    if (mode < 0.45){
-      const e = pick(ELEMENTS, rnd);
-      const pool = ELEMENTS.map(x => x.name);
-      const pack = makeAnswersTypeAware(e.name, pool, rnd);
-      return {category:"Science", question:`Which element has the chemical symbol ${e.symbol}`, answers: pack.answers, correct: pack.correctIndex};
+    if (kind === "number") {
+      const deltas = [-20,-15,-12,-10,-8,-6,-5,-4,-3,-2,2,3,4,5,6,8,10,12,15,20,25,30];
+      let guard = 0;
+      while (out.length < 3 && guard++ < 500) {
+        const d = pick(deltas, rnd);
+        const v = cNum + d;
+        if (!Number.isFinite(v)) continue;
+        add(String(v));
+      }
+      while (out.length < 3) add(String(cNum + (out.length+1)));
+      return out;
     }
-    if (mode < 0.75){
-      const pIndex = Math.floor(rnd() * PLANETS.length);
-      const planet = PLANETS[pIndex];
-      const question = `Which planet is ${pIndex+1} from the Sun`;
-      const pool = PLANETS.slice(0);
-      const pack = makeAnswersTypeAware(planet, pool, rnd);
-      return {category:"Science", question, answers: pack.answers, correct: pack.correctIndex};
+
+    const fillers = [
+      "Alpha","Beta","Gamma","Delta","Epsilon",
+      "North","South","East","West",
+      "Prime","Nova","Apex","Vertex","Nimbus","Aurora",
+      "Silver","Gold","Iron","Copper","Zinc",
+      "Tokyo","Paris","Berlin","Madrid","Rome",
+      "Jaws","Titanic","Avatar","Rocky","Matrix",
+      "Violin","Piano","Guitar","Drums","Saxophone",
+      "Linux","Windows","Android","iOS","macOS"
+    ];
+
+    let guard = 0;
+    while (out.length < 3 && guard++ < 700) {
+      add(pick(fillers, rnd));
     }
-    const fact = pick(SPORTS_FACTS, rnd);
-    const pool = [];
-    const pack = makeAnswersTypeAware(fact.a, pool, rnd);
-    return {category:"Science", question: `${fact.q}`, answers: pack.answers, correct: pack.correctIndex};
+    while (out.length < 3) add("Option " + (out.length + 1));
+    return out;
   }
 
-  function qGeneral(rnd){
-    const c = pick(CAPITALS, rnd);
-    const pool = CAPITALS.map(x => x.capital);
-    const pack = makeAnswersTypeAware(c.capital, pool, rnd);
-    return {category:"General", question:`What is the capital of ${c.country}`, answers: pack.answers, correct: pack.correctIndex};
+  function makeQuestion(category, questionText, correctAnswer, wrongCandidates, rnd) {
+    const kind = isYearLike(correctAnswer) ? "year" : (isNumberLike(correctAnswer) ? "number" : "text");
+
+    let wrongs = [];
+    if (wrongCandidates && wrongCandidates.length) {
+      const pool = uniq(wrongCandidates.map(String)).filter(x => normalize(x) !== normalize(correctAnswer));
+      if (kind === "year") {
+        const yPool = pool.filter(isYearLike);
+        wrongs = shuffleInPlace(yPool.slice(), rnd).slice(0, 3);
+      } else if (kind === "number") {
+        const nPool = pool.filter(isNumberLike);
+        wrongs = shuffleInPlace(nPool.slice(), rnd).slice(0, 3);
+      } else {
+        wrongs = shuffleInPlace(pool.slice(), rnd).slice(0, 3);
+      }
+    }
+
+    if (wrongs.length < 3) {
+      const autoWrongs = makeWrongAnswers(correctAnswer, kind === "text" ? "text" : kind, rnd);
+      for (const w of autoWrongs) {
+        if (wrongs.length >= 3) break;
+        if (normalize(w) !== normalize(correctAnswer) && !wrongs.some(x => normalize(x) === normalize(w))) wrongs.push(w);
+      }
+    }
+
+    let answers = [String(correctAnswer), ...wrongs].slice(0,4);
+    answers = uniq(answers).slice(0,4);
+
+    while (answers.length < 4) {
+      const fill = makeWrongAnswers(correctAnswer, kind === "text" ? "text" : kind, rnd).pop();
+      if (!answers.some(x => normalize(x) === normalize(fill))) answers.push(fill);
+    }
+
+    shuffleInPlace(answers, rnd);
+    const correctIndex = answers.findIndex(a => normalize(a) === normalize(correctAnswer));
+
+    return {
+      category,
+      question: questionText,
+      answers,
+      correct: correctIndex
+    };
   }
 
-  function qTech(rnd){
-    const item = pick(TECH_PRODUCTS, rnd);
-    const pool = uniq(TECH_PRODUCTS.map(x => x.company));
-    const pack = makeAnswersTypeAware(item.company, pool, rnd);
-    return {category:"Tech", question:`Which company makes ${item.product}`, answers: pack.answers, correct: pack.correctIndex};
-  }
+  const DATA = {
+    geography: {
+      capitals: [
+        ["France","Paris"],["Spain","Madrid"],["Italy","Rome"],["Germany","Berlin"],["Portugal","Lisbon"],["Netherlands","Amsterdam"],
+        ["Belgium","Brussels"],["Switzerland","Bern"],["Austria","Vienna"],["Poland","Warsaw"],["Czech Republic","Prague"],
+        ["Hungary","Budapest"],["Greece","Athens"],["Turkey","Ankara"],["Ireland","Dublin"],["United Kingdom","London"],
+        ["Norway","Oslo"],["Sweden","Stockholm"],["Finland","Helsinki"],["Denmark","Copenhagen"],["Iceland","Reykjavik"],
+        ["Canada","Ottawa"],["Mexico","Mexico City"],["Brazil","Brasilia"],["Argentina","Buenos Aires"],["Chile","Santiago"],
+        ["Peru","Lima"],["Colombia","Bogota"],["Venezuela","Caracas"],["Ecuador","Quito"],["Bolivia","Sucre"],
+        ["China","Beijing"],["Japan","Tokyo"],["South Korea","Seoul"],["North Korea","Pyongyang"],["India","New Delhi"],
+        ["Pakistan","Islamabad"],["Bangladesh","Dhaka"],["Sri Lanka","Sri Jayawardenepura Kotte"],["Thailand","Bangkok"],
+        ["Vietnam","Hanoi"],["Malaysia","Kuala Lumpur"],["Singapore","Singapore"],["Indonesia","Jakarta"],
+        ["Philippines","Manila"],["Australia","Canberra"],["New Zealand","Wellington"],
+        ["Egypt","Cairo"],["Morocco","Rabat"],["Algeria","Algiers"],["Tunisia","Tunis"],["Libya","Tripoli"],
+        ["Nigeria","Abuja"],["Ghana","Accra"],["Kenya","Nairobi"],["Ethiopia","Addis Ababa"],["South Africa","Pretoria"],
+        ["Saudi Arabia","Riyadh"],["United Arab Emirates","Abu Dhabi"],["Israel","Jerusalem"],["Jordan","Amman"],["Iraq","Baghdad"],
+        ["Iran","Tehran"],["Qatar","Doha"],["Kuwait","Kuwait City"],["Oman","Muscat"],["Yemen","Sana'a"],
+        ["Russia","Moscow"],["Ukraine","Kyiv"],["Romania","Bucharest"],["Bulgaria","Sofia"],["Serbia","Belgrade"]
+      ],
+      usStates: [
+        ["Alabama","Montgomery"],["Alaska","Juneau"],["Arizona","Phoenix"],["Arkansas","Little Rock"],["California","Sacramento"],
+        ["Colorado","Denver"],["Connecticut","Hartford"],["Delaware","Dover"],["Florida","Tallahassee"],["Georgia","Atlanta"],
+        ["Hawaii","Honolulu"],["Idaho","Boise"],["Illinois","Springfield"],["Indiana","Indianapolis"],["Iowa","Des Moines"],
+        ["Kansas","Topeka"],["Kentucky","Frankfort"],["Louisiana","Baton Rouge"],["Maine","Augusta"],["Maryland","Annapolis"],
+        ["Massachusetts","Boston"],["Michigan","Lansing"],["Minnesota","Saint Paul"],["Mississippi","Jackson"],["Missouri","Jefferson City"],
+        ["Montana","Helena"],["Nebraska","Lincoln"],["Nevada","Carson City"],["New Hampshire","Concord"],["New Jersey","Trenton"],
+        ["New Mexico","Santa Fe"],["New York","Albany"],["North Carolina","Raleigh"],["North Dakota","Bismarck"],["Ohio","Columbus"],
+        ["Oklahoma","Oklahoma City"],["Oregon","Salem"],["Pennsylvania","Harrisburg"],["Rhode Island","Providence"],["South Carolina","Columbia"],
+        ["South Dakota","Pierre"],["Tennessee","Nashville"],["Texas","Austin"],["Utah","Salt Lake City"],["Vermont","Montpelier"],
+        ["Virginia","Richmond"],["Washington","Olympia"],["West Virginia","Charleston"],["Wisconsin","Madison"],["Wyoming","Cheyenne"]
+      ]
+    },
+    science: {
+      elements: [
+        ["H","Hydrogen"],["He","Helium"],["Li","Lithium"],["Be","Beryllium"],["B","Boron"],["C","Carbon"],["N","Nitrogen"],["O","Oxygen"],
+        ["F","Fluorine"],["Ne","Neon"],["Na","Sodium"],["Mg","Magnesium"],["Al","Aluminum"],["Si","Silicon"],["P","Phosphorus"],
+        ["S","Sulfur"],["Cl","Chlorine"],["Ar","Argon"],["K","Potassium"],["Ca","Calcium"],["Fe","Iron"],["Cu","Copper"],["Zn","Zinc"],
+        ["Ag","Silver"],["Au","Gold"],["Sn","Tin"],["I","Iodine"],["Pb","Lead"],["Hg","Mercury"],["U","Uranium"]
+      ],
+      planets: [
+        ["Which planet is known as the Red Planet?","Mars"],
+        ["Which planet is closest to the Sun?","Mercury"],
+        ["Which planet is known for its rings?","Saturn"],
+        ["Which planet is the largest in our Solar System?","Jupiter"],
+        ["Which planet is famous for its blue color?","Neptune"],
+        ["Which planet is often called Earths twin?","Venus"],
+        ["Which dwarf planet is in the asteroid belt?","Ceres"]
+      ]
+    },
+    history: {
+      yearFacts: [
+        ["In which year did the Berlin Wall fall?","1989"],
+        ["In which year did the Titanic sink?","1912"],
+        ["In which year did World War II end?","1945"],
+        ["In which year did the first man land on the Moon?","1969"],
+        ["In which year was the Declaration of Independence signed?","1776"],
+        ["In which year did the internet become publicly available in many places?","1991"]
+      ],
+      generalFacts: [
+        ["Who was the first President of the United States?","George Washington"],
+        ["What empire built the Colosseum?","Roman Empire"],
+        ["What was the name of the ship on the Mayflower voyage?","Mayflower"]
+      ]
+    },
+    movies: {
+      facts: [
+        ["Which movie features the quote I will be back?","The Terminator"],
+        ["Which movie features the character Darth Vader?","Star Wars"],
+        ["Which movie has the line Here's looking at you kid?","Casablanca"],
+        ["Which movie features the character Indiana Jones?","Raiders of the Lost Ark"],
+        ["Which movie features a shark terrorizing a beach town?","Jaws"]
+      ]
+    },
+    music: {
+      facts: [
+        ["How many strings does a standard guitar have?","6"],
+        ["How many keys are on a standard piano?","88"],
+        ["Which instrument has black and white keys?","Piano"],
+        ["Which instrument is played with a bow?","Violin"],
+        ["Which instrument is known for its reeds?","Saxophone"]
+      ]
+    },
+    sports: {
+      facts: [
+        ["How many players are on the field for one soccer team?","11"],
+        ["How many innings are in a standard baseball game?","9"],
+        ["How many points is a touchdown worth in American football?","6"],
+        ["Which sport uses a puck?","Hockey"],
+        ["Which sport features a slam dunk?","Basketball"]
+      ]
+    },
+    tech: {
+      facts: [
+        ["Which company makes the iPhone?","Apple"],
+        ["What does CPU stand for?","Central Processing Unit"],
+        ["What does URL stand for?","Uniform Resource Locator"],
+        ["Which operating system is open source and often used on servers?","Linux"],
+        ["What does WiFi commonly refer to?","Wireless networking"]
+      ]
+    },
+    general: {
+      facts: [
+        ["What is the hardest natural mineral?","Diamond"],
+        ["How many continents are there on Earth?","7"],
+        ["How many days are in a leap year?","366"],
+        ["Which element has the chemical symbol O?","Oxygen"],
+        ["Which ocean is the largest?","Pacific"]
+      ]
+    }
+  };
 
-  function qHistory(rnd){
-    const e = pick(HISTORY_EVENTS, rnd);
-    const pool = [];
-    const pack = makeAnswersTypeAware(e.year, pool, rnd);
-    return {category:"History", question:`In what year did ${e.event}`, answers: pack.answers, correct: pack.correctIndex};
-  }
-
-  function qSports(rnd){
-    const fact = pick(SPORTS_FACTS, rnd);
-    const pool = [];
-    const pack = makeAnswersTypeAware(fact.a, pool, rnd);
-    return {category:"Sports", question: fact.q, answers: pack.answers, correct: pack.correctIndex};
-  }
-
-  function qMovies(rnd){
-    const m = pick(MOVIE_TRIVIA, rnd);
-    const all = shuffle([m.a, ...m.wrong.slice(0,3)], rnd);
-    return {category:"Movies", question:m.q, answers: all, correct: all.indexOf(m.a)};
-  }
-
-  function qMusic(rnd){
-    const m = pick(MUSIC_TRIVIA, rnd);
-    const all = shuffle([m.a, ...m.wrong.slice(0,3)], rnd);
-    return {category:"Music", question:m.q, answers: all, correct: all.indexOf(m.a)};
-  }
-
-  const MAKERS = [qGeneral, qScience, qMovies, qMusic, qHistory, qSports, qTech];
-
-  function buildBank(size){
-    const seed = hashToSeed(SETTINGS.seedSalt + "|" + location.href);
+  function buildBank(target) {
+    const seed = hashStringToSeed("derrickcbyron_trivia_v4");
     const rnd = mulberry32(seed);
 
     const bank = [];
-    const seen = new Set();
-    const recent = [];
-    const recentSet = new Set();
+    const seenQ = new Set();
+
+    const pools = [];
+
+    const capitalPairs = DATA.geography.capitals;
+    pools.push(() => {
+      const [country, capital] = pick(capitalPairs, rnd);
+      const wrongs = shuffleInPlace(capitalPairs.map(x => x[1]).filter(x => x !== capital), rnd).slice(0, 20);
+      return makeQuestion("Geography", "What is the capital of " + country + "?", capital, wrongs, rnd);
+    });
+
+    const statePairs = DATA.geography.usStates;
+    pools.push(() => {
+      const [state, capital] = pick(statePairs, rnd);
+      const wrongs = shuffleInPlace(statePairs.map(x => x[1]).filter(x => x !== capital), rnd).slice(0, 20);
+      return makeQuestion("Geography", "What is the capital of " + state + "?", capital, wrongs, rnd);
+    });
+
+    const elemPairs = DATA.science.elements;
+    pools.push(() => {
+      const [sym, name] = pick(elemPairs, rnd);
+      const wrongs = shuffleInPlace(elemPairs.map(x => x[1]).filter(x => x !== name), rnd).slice(0, 20);
+      return makeQuestion("Science", "Which element has the chemical symbol " + sym + "?", name, wrongs, rnd);
+    });
+
+    pools.push(() => {
+      const [sym, name] = pick(elemPairs, rnd);
+      const wrongs = shuffleInPlace(elemPairs.map(x => x[0]).filter(x => x !== sym), rnd).slice(0, 20);
+      return makeQuestion("Science", "What is the chemical symbol for " + name + "?", sym, wrongs, rnd);
+    });
+
+    const planetPairs = DATA.science.planets;
+    pools.push(() => {
+      const [q, a] = pick(planetPairs, rnd);
+      const wrongs = ["Mercury","Venus","Earth","Mars","Jupiter","Saturn","Uranus","Neptune","Pluto"].filter(x => normalize(x) !== normalize(a));
+      return makeQuestion("Science", q, a, wrongs, rnd);
+    });
+
+    const yearPairs = DATA.history.yearFacts;
+    pools.push(() => {
+      const [q, a] = pick(yearPairs, rnd);
+      return makeQuestion("History", q, a, [], rnd);
+    });
+
+    const histFacts = DATA.history.generalFacts;
+    pools.push(() => {
+      const [q, a] = pick(histFacts, rnd);
+      const wrongs = histFacts.map(x => x[1]).filter(x => normalize(x) !== normalize(a));
+      return makeQuestion("History", q, a, wrongs, rnd);
+    });
+
+    const movieFacts = DATA.movies.facts;
+    pools.push(() => {
+      const [q, a] = pick(movieFacts, rnd);
+      const wrongs = movieFacts.map(x => x[1]).filter(x => normalize(x) !== normalize(a));
+      return makeQuestion("Movies", q, a, wrongs, rnd);
+    });
+
+    const musicFacts = DATA.music.facts;
+    pools.push(() => {
+      const [q, a] = pick(musicFacts, rnd);
+      const wrongs = musicFacts.map(x => x[1]).filter(x => normalize(x) !== normalize(a));
+      return makeQuestion("Music", q, a, wrongs, rnd);
+    });
+
+    const sportsFacts = DATA.sports.facts;
+    pools.push(() => {
+      const [q, a] = pick(sportsFacts, rnd);
+      const wrongs = sportsFacts.map(x => x[1]).filter(x => normalize(x) !== normalize(a));
+      return makeQuestion("Sports", q, a, wrongs, rnd);
+    });
+
+    const techFacts = DATA.tech.facts;
+    pools.push(() => {
+      const [q, a] = pick(techFacts, rnd);
+      const wrongs = techFacts.map(x => x[1]).filter(x => normalize(x) !== normalize(a));
+      return makeQuestion("Tech", q, a, wrongs, rnd);
+    });
+
+    const genFacts = DATA.general.facts;
+    pools.push(() => {
+      const [q, a] = pick(genFacts, rnd);
+      const wrongs = genFacts.map(x => x[1]).filter(x => normalize(x) !== normalize(a));
+      return makeQuestion("General", q, a, wrongs, rnd);
+    });
+
+    pools.push(() => {
+      const ops = ["+","-","×"];
+      const op = pick(ops, rnd);
+      let a,b,ans,q;
+      if (op === "+") {
+        a = 10 + Math.floor(rnd()*990);
+        b = 10 + Math.floor(rnd()*990);
+        ans = a + b;
+        q = "What is " + a + " + " + b + "?";
+      } else if (op === "-") {
+        a = 100 + Math.floor(rnd()*900);
+        b = 10 + Math.floor(rnd()*90);
+        ans = a - b;
+        q = "What is " + a + " - " + b + "?";
+      } else {
+        a = 2 + Math.floor(rnd()*18);
+        b = 2 + Math.floor(rnd()*18);
+        ans = a * b;
+        q = "What is " + a + " × " + b + "?";
+      }
+      return makeQuestion("Math", q, String(ans), [], rnd);
+    });
+
+    pools.push(() => {
+      const n = 2 + Math.floor(rnd()*98);
+      const sq = n*n;
+      const q = "What is " + n + " squared?";
+      return makeQuestion("Math", q, String(sq), [], rnd);
+    });
+
     let guard = 0;
+    while (bank.length < target && guard++ < target * 60) {
+      const maker = pools[bank.length % pools.length];
+      const q = maker();
 
-    while (bank.length < size && guard < size * 200){
-      guard++;
+      const key = normalize(q.category) + "|" + normalize(q.question);
+      if (seenQ.has(key)) continue;
 
-      const maker = MAKERS[bank.length % MAKERS.length];
-      const q = maker(rnd);
+      if (SETTINGS.noImmediateRepeat && bank.length > 0) {
+        const prev = bank[bank.length - 1];
+        if (normalize(prev.question) === normalize(q.question)) continue;
+      }
 
-      const key = normalizeQuestionText(q.category + "|" + q.question);
-      if (seen.has(key)) continue;
-
-      const recentKey = normalizeQuestionText(q.question);
-      if (recentSet.has(recentKey)) continue;
-
-      seen.add(key);
+      seenQ.add(key);
       bank.push(q);
+    }
 
-      recent.push(recentKey);
-      recentSet.add(recentKey);
-      while (recent.length > SETTINGS.avoidRepeatWindow){
-        const old = recent.shift();
-        recentSet.delete(old);
+    shuffleInPlace(bank, rnd);
+
+    if (SETTINGS.noImmediateRepeat && bank.length > 1) {
+      const first = bank[0];
+      const last = bank[bank.length - 1];
+      if (normalize(first.question) === normalize(last.question)) {
+        for (let i = 1; i < bank.length - 1; i++) {
+          if (normalize(bank[i].question) !== normalize(last.question)) {
+            [bank[0], bank[i]] = [bank[i], bank[0]];
+            break;
+          }
+        }
       }
     }
 
-    shuffle(bank, mulberry32(seed ^ 0xA5A5A5A5));
-    return bank.slice(0, size);
+    return bank.slice(0, target);
   }
 
-  // UI + rotation
-  const elQ = document.getElementById("qText");
+  const elQ = document.getElementById("questionText");
   const elAnswers = document.getElementById("answers");
   const elCat = document.getElementById("catChip");
   const elCount = document.getElementById("countChip");
-  const elFill = document.getElementById("barFill");
-  const elHint = document.getElementById("hint");
+  const elCountOf = document.getElementById("countOf");
+  const elBar = document.getElementById("barFill");
+  const elRight = document.getElementById("rightLine");
+  const elSub = document.getElementById("subline");
 
-  if (!SETTINGS.showCounter) elCount.style.display = "none";
-  if (!SETTINGS.showCategory) elCat.style.display = "none";
-
-  function loadState(){
-    try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return {i:0, orderSeed: 0};
-      const s = JSON.parse(raw);
-      return {i: Number(s.i)||0, orderSeed: Number(s.orderSeed)||0};
-    }catch(e){
-      return {i:0, orderSeed: 0};
-    }
-  }
-  function saveState(state){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  function setAnswerClasses(correctIndex, revealOn) {
+    const nodes = Array.from(elAnswers.querySelectorAll(".ans"));
+    nodes.forEach((n, i) => {
+      n.classList.remove("good","bad");
+      if (!revealOn) return;
+      if (i === correctIndex) n.classList.add("good");
+      else n.classList.add("bad");
+    });
   }
 
-  const BANK = buildBank(SETTINGS.totalQuestions);
-  let state = loadState();
-
-  // If bank changed size, reset index safely
-  if (state.i >= BANK.length) state.i = 0;
-
-  function renderQuestion(q, index){
-    elQ.textContent = q.question + "?";
+  function renderQuestion(q, idx, total) {
+    elSub.textContent = "Automated rotation through full bank";
+    elQ.textContent = q.question;
     elCat.textContent = q.category;
-
-    const n = index + 1;
-    elCount.textContent = `${n} of ${BANK.length}`;
+    elCount.textContent = String(idx + 1);
+    elCountOf.textContent = "of " + String(total);
 
     const letters = ["A","B","C","D"];
-    elAnswers.innerHTML = "";
-    for (let k=0;k<4;k++){
-      const row = document.createElement("div");
-      row.className = "ans";
-      const l = document.createElement("div");
-      l.className = "letter";
-      l.textContent = letters[k];
-      const t = document.createElement("div");
-      t.textContent = q.answers[k];
-      row.appendChild(l);
-      row.appendChild(t);
-      elAnswers.appendChild(row);
+    const nodes = Array.from(elAnswers.querySelectorAll(".ans"));
+    for (let i = 0; i < 4; i++) {
+      const badge = nodes[i].querySelector(".badge");
+      const txt = nodes[i].querySelector(".txt");
+      badge.textContent = letters[i];
+      txt.textContent = q.answers[i];
+      nodes[i].style.visibility = "visible";
+    }
+
+    setAnswerClasses(q.correct, false);
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch {
+      return null;
     }
   }
 
-  function revealAnswer(q){
-    const nodes = Array.from(elAnswers.children);
-    for (let i=0;i<nodes.length;i++){
-      nodes[i].classList.remove("good","bad");
-      if (i === q.correct) nodes[i].classList.add("good");
-      else nodes[i].classList.add("bad");
-    }
+  function saveState(state) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
   }
 
-  function clearReveal(){
-    const nodes = Array.from(elAnswers.children);
-    for (const n of nodes) n.classList.remove("good","bad");
-  }
+  function main() {
+    const QUESTIONS = buildBank(SETTINGS.totalQuestions);
 
-  let phase = "think";
-  let elapsed = 0;
+    let state = loadState() || {};
+    if (!Number.isInteger(state.index) || state.index < 0 || state.index >= QUESTIONS.length) state.index = 0;
 
-  function step(){
-    const q = BANK[state.i];
-    if (!q){
-      elQ.textContent = "Loading";
-      return;
-    }
+    let lastQuestionKey = state.lastQuestionKey || "";
 
-    if (phase === "think"){
-      elHint.textContent = "Reveal soon";
-      elapsed += SETTINGS.tickMs;
-      const p = clamp(elapsed / SETTINGS.thinkMs, 0, 1);
-      elFill.style.width = (p * 100).toFixed(1) + "%";
-      if (elapsed >= SETTINGS.thinkMs){
-        phase = "reveal";
-        elapsed = 0;
-        revealAnswer(q);
+    function nextIndex() {
+      let ni = state.index + 1;
+      if (ni >= QUESTIONS.length) ni = 0;
+
+      if (SETTINGS.noImmediateRepeat) {
+        const current = QUESTIONS[state.index];
+        const next = QUESTIONS[ni];
+        const curKey = normalize(current.question);
+        const nextKey = normalize(next.question);
+
+        if (curKey === nextKey) {
+          for (let k = 0; k < 25; k++) {
+            const alt = (ni + 1 + k) % QUESTIONS.length;
+            if (normalize(QUESTIONS[alt].question) !== curKey) { ni = alt; break; }
+          }
+        }
       }
-      return;
+      return ni;
     }
 
-    if (phase === "reveal"){
-      elHint.textContent = "Answer shown";
-      elapsed += SETTINGS.tickMs;
-      const p = clamp(elapsed / SETTINGS.revealMs, 0, 1);
-      elFill.style.width = (100 - p * 100).toFixed(1) + "%";
-      if (elapsed >= SETTINGS.revealMs){
-        clearReveal();
-        phase = "think";
-        elapsed = 0;
+    function tickCycle() {
+      const q = QUESTIONS[state.index];
+      const qKey = normalize(q.question);
 
-        state.i = (state.i + 1) % BANK.length;
-        saveState(state);
-        renderQuestion(BANK[state.i], state.i);
+      if (SETTINGS.noImmediateRepeat && lastQuestionKey && qKey === lastQuestionKey) {
+        state.index = nextIndex();
       }
-      return;
+
+      renderQuestion(QUESTIONS[state.index], state.index, QUESTIONS.length);
+      lastQuestionKey = normalize(QUESTIONS[state.index].question);
+
+      let t = 0;
+      const thinkSteps = Math.max(1, Math.floor(SETTINGS.thinkMs / SETTINGS.tickMs));
+      const revealSteps = Math.max(1, Math.floor(SETTINGS.revealMs / SETTINGS.tickMs));
+      const totalSteps = thinkSteps + revealSteps;
+
+      elRight.textContent = "Reveal soon";
+      elBar.style.width = "0%";
+      setAnswerClasses(QUESTIONS[state.index].correct, false);
+
+      const timer = setInterval(() => {
+        t++;
+        const pct = Math.min(100, Math.floor((t / totalSteps) * 100));
+        elBar.style.width = pct + "%";
+
+        if (t === thinkSteps) {
+          elRight.textContent = "Answer";
+          setAnswerClasses(QUESTIONS[state.index].correct, true);
+        }
+
+        if (t >= totalSteps) {
+          clearInterval(timer);
+          state.index = nextIndex();
+          state.lastQuestionKey = lastQuestionKey;
+          saveState(state);
+          setTimeout(tickCycle, 80);
+        }
+      }, SETTINGS.tickMs);
     }
+
+    tickCycle();
   }
 
-  // Start
-  renderQuestion(BANK[state.i], state.i);
-  setInterval(step, SETTINGS.tickMs);
+  main();
 })();
 </script>
 </body>
