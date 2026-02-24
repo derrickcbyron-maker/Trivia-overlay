@@ -1,152 +1,339 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Derrick C Byron Cinematic 24/7 Trivia</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Derrick C Byron Cinematic 24 7 Trivia</title>
+  <style>
+    :root{
+      --panel: rgba(25, 28, 36, 0.86);
+      --panelBorder: rgba(255,255,255,0.10);
+      --text: rgba(255,255,255,0.94);
+      --muted: rgba(255,255,255,0.72);
+      --chip: rgba(255,255,255,0.12);
+      --chipText: rgba(255,255,255,0.88);
+      --barBg: rgba(255,255,255,0.18);
+      --barFill1: rgba(110, 190, 255, 0.95);
+      --barFill2: rgba(184, 120, 255, 0.95);
+    }
 
-<style>
-body {
-    margin:0;
-    padding:0;
-    background:transparent;
-    font-family: 'Segoe UI', sans-serif;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-}
+    html, body{
+      height:100%;
+      margin:0;
+      background: transparent;
+      overflow:hidden;
+      font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    }
 
-.container {
-    width:90%;
-    max-width:1100px;
-    padding:40px;
-    border-radius:20px;
-    backdrop-filter: blur(20px);
-    background: rgba(20,20,30,0.75);
-    box-shadow: 0 0 40px rgba(0,0,0,0.5);
-    color:white;
-}
+    .wrap{
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 28px 34px 24px 34px;
+      display:flex;
+      justify-content:center;
+      pointer-events:none;
+    }
 
-.header {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
-}
+    .panel{
+      width: min(1400px, calc(100vw - 40px));
+      background: var(--panel);
+      border: 1px solid var(--panelBorder);
+      border-radius: 22px;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.35);
+      padding: 22px 26px 18px 26px;
+      backdrop-filter: blur(10px);
+    }
 
-.title {
-    font-size:18px;
-    letter-spacing:1px;
-    opacity:0.7;
-}
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 18px;
+      margin-bottom: 10px;
+    }
 
-.category {
-    padding:6px 14px;
-    background:rgba(255,255,255,0.1);
-    border-radius:20px;
-    font-size:14px;
-}
+    .brand{
+      font-size: 16px;
+      color: var(--muted);
+      letter-spacing: 0.2px;
+    }
 
-.question {
-    font-size:42px;
-    font-weight:700;
-    margin:20px 0 30px 0;
-}
+    .chips{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
 
-.answers li {
-    list-style:none;
-    padding:16px;
-    margin:12px 0;
-    border-radius:12px;
-    background:rgba(255,255,255,0.08);
-    font-size:20px;
-}
+    .chip{
+      background: var(--chip);
+      color: var(--chipText);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 13px;
+      line-height: 1;
+      white-space: nowrap;
+    }
 
-.correct {
-    background:rgba(0,255,150,0.25) !important;
-}
+    .question{
+      font-size: clamp(28px, 3.2vw, 44px);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.2px;
+      margin: 6px 0 14px 0;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.28);
+    }
 
-.progress-bar {
-    height:8px;
-    border-radius:6px;
-    margin-top:30px;
-    background:linear-gradient(90deg,#4facfe,#a855f7);
-    width:0%;
-}
-</style>
+    .answers{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 12px;
+      margin-bottom: 14px;
+    }
+
+    .ans{
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.10);
+      padding: 12px 14px;
+      color: rgba(255,255,255,0.92);
+      font-size: 16px;
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      min-height: 44px;
+    }
+
+    .badge{
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(255,255,255,0.12);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight: 700;
+      color: rgba(255,255,255,0.90);
+      flex: 0 0 auto;
+    }
+
+    .ans.correct{
+      outline: 2px solid rgba(120, 255, 190, 0.65);
+      background: rgba(120, 255, 190, 0.12);
+    }
+
+    .ans.dim{
+      opacity: 0.55;
+    }
+
+    .bottom{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .bar{
+      flex: 1 1 auto;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--barBg);
+      border: 1px solid rgba(255,255,255,0.10);
+      overflow:hidden;
+      position: relative;
+      margin: 0 10px;
+    }
+
+    .fill{
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--barFill1), var(--barFill2));
+      transition: width 0.10s linear;
+    }
+
+    .note{
+      white-space: nowrap;
+    }
+
+    @media (max-width: 900px){
+      .answers{ grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="wrap">
+    <div class="panel" id="panel">
+      <div class="top">
+        <div class="brand" id="brand">Derrick C Byron Cinematic 24 7 Trivia</div>
+        <div class="chips">
+          <div class="chip" id="catChip">Space</div>
+          <div class="chip" id="modeChip">Question</div>
+        </div>
+      </div>
 
-<div class="container">
-    <div class="header">
-        <div class="title">Derrick C Byron Cinematic 24/7 Trivia</div>
-        <div class="category" id="category">Category</div>
+      <div class="question" id="qText">Loading trivia</div>
+
+      <div class="answers" id="answers">
+        <div class="ans"><div class="badge">A</div><div>Loading</div></div>
+        <div class="ans"><div class="badge">B</div><div>Loading</div></div>
+        <div class="ans"><div class="badge">C</div><div>Loading</div></div>
+        <div class="ans"><div class="badge">D</div><div>Loading</div></div>
+      </div>
+
+      <div class="bottom">
+        <div class="note" id="leftNote">Answer in your head</div>
+        <div class="bar"><div class="fill" id="fill"></div></div>
+        <div class="note" id="rightNote">Reveal soon</div>
+      </div>
     </div>
+  </div>
 
-    <div class="question" id="question">Loading...</div>
+  <script>
+    const SETTINGS = {
+      questionSeconds: 12,
+      revealSeconds: 4,
+      shuffleEachCycle: true
+    }
 
-    <ul class="answers" id="answers"></ul>
+    const FALLBACK_QUESTIONS = [
+      { cat:"Space", q:"Which planet is known as the Red Planet?", a:["Mars","Jupiter","Venus","Mercury"], correct:0 },
+      { cat:"Science", q:"Which element has the chemical symbol O?", a:["Gold","Osmium","Oxygen","Iron"], correct:2 },
+      { cat:"Music", q:"Who was known as the King of Pop?", a:["Prince","Michael Jackson","Elvis Presley","Madonna"], correct:1 },
+      { cat:"Film", q:"Which movie features the quote May the Force be with you?", a:["Star Wars","Alien","Titanic","Inception"], correct:0 },
+      { cat:"History", q:"The Great Pyramid of Giza is in which country?", a:["Mexico","Egypt","Greece","Peru"], correct:1 },
+      { cat:"World facts", q:"Which ocean is the largest on Earth?", a:["Atlantic","Indian","Pacific","Arctic"], correct:2 }
+    ]
 
-    <div class="progress-bar" id="progress"></div>
-</div>
+    function shuffle(arr){
+      for(let i = arr.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1))
+        const t = arr[i]
+        arr[i] = arr[j]
+        arr[j] = t
+      }
+      return arr
+    }
 
-<script src="questions.js"></script>
-<script>
+    let questions = []
+    let index = 0
+    let tick = null
+    let startTime = 0
+    let phase = "question"
 
-let current = 0;
-let progressInterval;
-const duration = 10000;
+    const qText = document.getElementById("qText")
+    const answersEl = document.getElementById("answers")
+    const fill = document.getElementById("fill")
+    const catChip = document.getElementById("catChip")
+    const modeChip = document.getElementById("modeChip")
 
-function showQuestion() {
-    const q = TRIVIA_BANK[current];
-    document.getElementById("question").textContent = q.question;
-    document.getElementById("category").textContent = q.category;
+    function setAnswers(items){
+      answersEl.innerHTML = ""
+      const labels = ["A","B","C","D"]
+      for(let i=0;i<4;i++){
+        const row = document.createElement("div")
+        row.className = "ans"
+        const b = document.createElement("div")
+        b.className = "badge"
+        b.textContent = labels[i]
+        const t = document.createElement("div")
+        t.textContent = items[i] || ""
+        row.appendChild(b)
+        row.appendChild(t)
+        answersEl.appendChild(row)
+      }
+    }
 
-    const answers = document.getElementById("answers");
-    answers.innerHTML = "";
+    function resetStyles(){
+      const nodes = answersEl.querySelectorAll(".ans")
+      nodes.forEach(n => { n.classList.remove("correct"); n.classList.remove("dim") })
+    }
 
-    q.answers.forEach((ans,index)=>{
-        const li = document.createElement("li");
-        li.textContent = String.fromCharCode(65+index) + ". " + ans;
-        answers.appendChild(li);
-    });
+    function showCurrent(){
+      const item = questions[index]
+      catChip.textContent = item.cat || "Trivia"
+      modeChip.textContent = "Question"
+      qText.textContent = item.q
+      setAnswers(item.a)
+      resetStyles()
+      fill.style.width = "0%"
+      phase = "question"
+      startTime = performance.now()
+      loop()
+    }
 
-    startTimer();
-}
+    function reveal(){
+      const item = questions[index]
+      const nodes = answersEl.querySelectorAll(".ans")
+      nodes.forEach((n, i) => {
+        if(i === item.correct) n.classList.add("correct")
+        else n.classList.add("dim")
+      })
+      modeChip.textContent = "Answer"
+      phase = "reveal"
+      startTime = performance.now()
+      loop()
+    }
 
-function startTimer() {
-    const progress = document.getElementById("progress");
-    progress.style.width = "0%";
+    function loop(){
+      if(tick) cancelAnimationFrame(tick)
 
-    let elapsed = 0;
-    clearInterval(progressInterval);
+      const now = performance.now()
+      const duration = (phase === "question" ? SETTINGS.questionSeconds : SETTINGS.revealSeconds) * 1000
+      const elapsed = Math.min(duration, now - startTime)
+      const pct = Math.max(0, Math.min(1, elapsed / duration))
+      fill.style.width = (pct * 100).toFixed(2) + "%"
 
-    progressInterval = setInterval(()=>{
-        elapsed += 100;
-        progress.style.width = (elapsed/duration)*100 + "%";
-
-        if(elapsed >= duration){
-            clearInterval(progressInterval);
-            revealAnswer();
+      if(elapsed >= duration){
+        if(phase === "question"){
+          reveal()
+          return
+        }else{
+          index = (index + 1) % questions.length
+          if(index === 0 && SETTINGS.shuffleEachCycle) shuffle(questions)
+          showCurrent()
+          return
         }
-    },100);
-}
+      }
 
-function revealAnswer(){
-    const items = document.querySelectorAll(".answers li");
-    items[TRIVIA_BANK[current].correct].classList.add("correct");
+      tick = requestAnimationFrame(loop)
+    }
 
-    setTimeout(()=>{
-        current = (current + 1) % TRIVIA_BANK.length;
-        showQuestion();
-    },4000);
-}
+    async function boot(){
+      try{
+        if(window.TRIVIA_QUESTIONS && Array.isArray(window.TRIVIA_QUESTIONS) && window.TRIVIA_QUESTIONS.length){
+          questions = window.TRIVIA_QUESTIONS
+        }else{
+          questions = FALLBACK_QUESTIONS
+        }
 
-showQuestion();
+        questions = questions
+          .filter(x => x && x.q && x.a && x.a.length === 4 && Number.isInteger(x.correct))
+          .map(x => ({ cat: x.cat || "Trivia", q: x.q, a: x.a, correct: x.correct }))
 
-</script>
+        if(!questions.length) questions = FALLBACK_QUESTIONS
 
+        if(SETTINGS.shuffleEachCycle) shuffle(questions)
+        index = 0
+        showCurrent()
+      }catch(e){
+        questions = FALLBACK_QUESTIONS
+        showCurrent()
+      }
+    }
+
+    const script = document.createElement("script")
+    script.src = "questions.js?v=" + Date.now()
+    script.async = true
+    script.onload = () => boot()
+    script.onerror = () => boot()
+    document.head.appendChild(script)
+  </script>
 </body>
 </html>
