@@ -3,22 +3,27 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Derrick C Byron Cinematic 24/7 Trivia</title>
+  <title>Derrick C Byron 24/7 Trivia Overlay</title>
   <style>
     :root{
-      --bg:#0b0e14;
-      --card:#141a22;
-      --card2:#101621;
-      --text:#e9eef6;
-      --muted:#a9b4c6;
-      --line:rgba(255,255,255,.10);
-      --good:rgba(95, 225, 165, .22);
-      --bad:rgba(255, 95, 110, .18);
-      --goodLine:rgba(95, 225, 165, .55);
-      --badLine:rgba(255, 95, 110, .50);
+      --panel-bg: rgba(16, 20, 28, 0.78);
+      --panel-border: rgba(255,255,255,0.12);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.65);
+      --good: rgba(95, 225, 165, .22);
+      --bad: rgba(255, 95, 110, .18);
+      --goodLine: rgba(95, 225, 165, .55);
+      --badLine: rgba(255, 95, 110, .50);
+      --bar: rgba(160, 190, 255, 0.85);
     }
 
-    html,body{height:100%; margin:0; background:transparent; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;}
+    html,body{
+      height:100%;
+      margin:0;
+      background:transparent;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
     .wrap{
       height:100%;
       display:flex;
@@ -27,72 +32,79 @@
       padding:24px;
       box-sizing:border-box;
     }
+
     .panel{
-      width:min(1200px, 96vw);
+      width:min(1180px, 96vw);
       border-radius:18px;
-      background:linear-gradient(180deg, rgba(20,26,34,.98), rgba(15,20,29,.98));
-      border:1px solid var(--line);
-      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+      background: var(--panel-bg);
+      border:1px solid var(--panel-border);
+      box-shadow: 0 18px 55px rgba(0,0,0,0.35);
       overflow:hidden;
+      backdrop-filter: blur(10px);
     }
+
     .top{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap:16px;
-      padding:18px 20px 10px 20px;
+      gap:14px;
+      padding:16px 18px 10px 18px;
     }
+
     .brand{
-      color:var(--muted);
-      font-size:14px;
-      letter-spacing:.2px;
+      color: var(--muted);
+      font-size:13px;
+      letter-spacing:0.2px;
       line-height:1.2;
     }
-    .sub{
-      color:rgba(233,238,246,.65);
-      font-size:12px;
+
+    .status{
       margin-top:4px;
+      color: rgba(255,255,255,0.62);
+      font-size:12px;
     }
+
     .chips{
       display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:flex-end;
       flex-wrap:wrap;
+      gap:10px;
+      justify-content:flex-end;
     }
+
     .chip{
-      color:rgba(233,238,246,.86);
+      color: rgba(255,255,255,0.84);
       font-size:12px;
       padding:6px 10px;
       border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
+      border:1px solid var(--panel-border);
+      background: rgba(255,255,255,0.06);
       user-select:none;
       white-space:nowrap;
     }
 
     .q{
-      padding:0 20px 10px 20px;
-      color:var(--text);
-      font-size:44px;
+      padding:0 18px 10px 18px;
+      color: var(--text);
+      font-size:42px;
       font-weight:800;
       line-height:1.05;
-      letter-spacing:-.6px;
-      min-height:96px;
+      letter-spacing:-0.6px;
+      min-height:94px;
     }
 
     .answers{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap:12px;
-      padding:10px 20px 16px 20px;
+      padding:10px 18px 16px 18px;
     }
+
     .ans{
       border-radius:14px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
+      border:1px solid var(--panel-border);
+      background: rgba(255,255,255,0.06);
       padding:14px 14px;
-      color:rgba(233,238,246,.92);
+      color: rgba(255,255,255,0.92);
       display:flex;
       gap:12px;
       align-items:center;
@@ -100,6 +112,7 @@
       min-height:56px;
       box-sizing:border-box;
     }
+
     .badge{
       width:28px;
       height:28px;
@@ -109,59 +122,66 @@
       justify-content:center;
       font-weight:800;
       font-size:12px;
-      border:1px solid var(--line);
-      background:rgba(0,0,0,.18);
+      border:1px solid var(--panel-border);
+      background: rgba(0,0,0,0.18);
       flex:0 0 auto;
     }
+
     .ans.good{
-      background:linear-gradient(0deg, var(--good), rgba(255,255,255,.03));
-      border-color:var(--goodLine);
+      background: linear-gradient(0deg, var(--good), rgba(255,255,255,0.06));
+      border-color: var(--goodLine);
     }
     .ans.bad{
-      background:linear-gradient(0deg, var(--bad), rgba(255,255,255,.03));
-      border-color:var(--badLine);
+      background: linear-gradient(0deg, var(--bad), rgba(255,255,255,0.06));
+      border-color: var(--badLine);
     }
 
     .bottom{
-      padding:0 20px 18px 20px;
+      padding:0 18px 16px 18px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:12px;
     }
+
     .hint{
-      color:rgba(233,238,246,.60);
+      color: rgba(255,255,255,0.60);
       font-size:12px;
+      white-space:nowrap;
     }
+
     .bar{
       flex:1 1 auto;
       height:8px;
       border-radius:999px;
       overflow:hidden;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
+      border:1px solid var(--panel-border);
+      background: rgba(255,255,255,0.06);
     }
+
     .fill{
       height:100%;
       width:0%;
-      background:linear-gradient(90deg, rgba(120,210,255,.85), rgba(200,120,255,.78));
+      background: linear-gradient(90deg, rgba(120,210,255,.90), rgba(200,120,255,.80));
       border-radius:999px;
     }
-    .soon{
-      color:rgba(233,238,246,.55);
+
+    .tiny{
+      color: rgba(255,255,255,0.55);
       font-size:12px;
       white-space:nowrap;
     }
 
     .error{
-      padding:14px 20px 18px 20px;
-      color:rgba(255,255,255,.90);
-      font-size:14px;
-      border-top:1px solid var(--line);
-      background:rgba(255,95,110,.08);
       display:none;
+      padding:12px 18px 16px 18px;
+      border-top:1px solid var(--panel-border);
+      background: rgba(255, 95, 110, 0.12);
+      color: rgba(255,255,255,0.9);
+      font-size:13px;
+      line-height:1.3;
     }
-    .error b{color:rgba(255,95,110,.95)}
+    .error b{ color: rgba(255, 95, 110, 0.95); }
   </style>
 </head>
 <body>
@@ -169,12 +189,13 @@
     <div class="panel">
       <div class="top">
         <div>
-          <div class="brand">Derrick C Byron Cinematic 24/7 Trivia</div>
-          <div class="sub" id="statusLine">Loading questions</div>
+          <div class="brand">Derrick C Byron Cinematic Trivia</div>
+          <div class="status" id="statusLine">Starting</div>
         </div>
         <div class="chips">
           <div class="chip" id="catChip">Category</div>
-          <div class="chip" id="countChip" style="display:none;">0 of 0</div>
+          <div class="chip" id="countChip">0</div>
+          <div class="chip" id="bufferChip">Buffer 0</div>
         </div>
       </div>
 
@@ -188,42 +209,76 @@
       </div>
 
       <div class="bottom">
-        <div class="hint">Answer in your head</div>
+        <div class="hint">Think of the answer</div>
         <div class="bar"><div class="fill" id="barFill"></div></div>
-        <div class="soon" id="soonText">Reveal soon</div>
+        <div class="tiny" id="phaseText">Reveal soon</div>
       </div>
 
       <div class="error" id="errorBox"></div>
     </div>
   </div>
 
-  <!-- IMPORTANT: bump v number when you change questions.js so GitHub Pages stops serving old cache -->
-  <script src="./questions.js?v=99"></script>
+  <!-- config (optional) -->
+  <script src="./questions.js?v=1"></script>
 
   <script>
-    // Settings
-    const SETTINGS = {
+    // --------- Config (can be overridden by questions.js) ---------
+    const CFG = Object.assign({
       thinkMs: 9000,
       revealMs: 2500,
-      tickMs: 50
-    };
+      tickMs: 50,
 
-    // Turn this on only if you want viewers to see progress
-    const SHOW_COUNTER = true;
+      // Keeps a rolling buffer so it never hangs
+      bufferTarget: 120,
+      fetchBatch: 50,
 
-    // Bump this when logic changes so old rotation state is discarded
-    const STORAGE_KEY = "dcbyron_trivia_state_v99";
+      // Open Trivia DB endpoint (free, no key)
+      apiBase: "https://opentdb.com/api.php",
+
+      // If you want "real" categories, you can later add a dropdown and pass category IDs.
+      // For now, we grab mixed categories.
+      apiParams: {
+        amount: 50,
+        type: "multiple",
+        encode: "url3986"
+      },
+
+      // Avoid repeats across time
+      usedKey: "dcb_used_questions_v1",
+      usedMax: 5000,
+
+      // Counter shown to viewers
+      counterPrefix: "Q",
+      // Small on-screen credit to the data source (recommended for compliance)
+      showAttributionInStatus: true
+    }, window.DCB_TRIVIA_CONFIG || {});
+    // ------------------------------------------------------------
 
     const elQ = document.getElementById("questionText");
     const elAnsWrap = document.getElementById("answers");
     const elCat = document.getElementById("catChip");
     const elCount = document.getElementById("countChip");
+    const elBuf = document.getElementById("bufferChip");
     const elBar = document.getElementById("barFill");
-    const elSoon = document.getElementById("soonText");
+    const elPhase = document.getElementById("phaseText");
     const elStatus = document.getElementById("statusLine");
     const elErr = document.getElementById("errorBox");
-
     const letters = ["A","B","C","D"];
+
+    let shownCount = 0;
+
+    function decode3986(s){
+      try { return decodeURIComponent(String(s || "")); }
+      catch { return String(s || ""); }
+    }
+
+    function shuffle(arr){
+      for (let i = arr.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
 
     function showError(msg){
       elErr.style.display = "block";
@@ -231,82 +286,108 @@
       elStatus.textContent = "Error";
     }
 
-    function shuffle(arr){
-      for (let i = arr.length - 1; i > 0; i--){
-        const j = Math.floor(Math.random() * (i + 1));
-        const t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    function loadUsedSet(){
+      try{
+        const raw = localStorage.getItem(CFG.usedKey);
+        const arr = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(arr)) return new Set();
+        return new Set(arr);
+      }catch{
+        return new Set();
       }
-      return arr;
     }
 
-    function safeParse(json, fallback){
-      try { return JSON.parse(json); } catch { return fallback; }
+    function saveUsedSet(set){
+      try{
+        const arr = Array.from(set);
+        // keep it bounded
+        const trimmed = arr.slice(Math.max(0, arr.length - CFG.usedMax));
+        localStorage.setItem(CFG.usedKey, JSON.stringify(trimmed));
+      }catch{}
     }
 
-    function buildNewOrder(n){
-      const order = Array.from({length:n}, (_,i)=>i);
-      shuffle(order);
-      return order;
+    const used = loadUsedSet();
+    const queue = [];
+
+    function makeKey(q){
+      return (q.category || "") + "|" + (q.question || "");
     }
 
-    function getState(n){
-      const saved = safeParse(localStorage.getItem(STORAGE_KEY) || "", null);
-      if (!saved || !Array.isArray(saved.order) || saved.order.length !== n || typeof saved.pos !== "number"){
-        return { order: buildNewOrder(n), pos: 0, lastIndex: -1, cycle: 1 };
-      }
-      return saved;
-    }
+    function normalizeApiItem(item){
+      const category = decode3986(item.category);
+      const question = decode3986(item.question);
+      const correct = decode3986(item.correct_answer);
+      const incorrect = (item.incorrect_answers || []).map(decode3986);
 
-    function saveState(state){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-
-    function nextQuestion(bank){
-      const n = bank.length;
-      let state = getState(n);
-
-      // If cycle finished, reshuffle
-      if (state.pos >= n){
-        state.order = buildNewOrder(n);
-        state.pos = 0;
-        state.cycle = (state.cycle || 1) + 1;
-      }
-
-      // Pick next index
-      let idx = state.order[state.pos];
-
-      // Prevent back to back repeat
-      if (idx === state.lastIndex && state.pos + 1 < n){
-        const swapIdx = state.order[state.pos + 1];
-        state.order[state.pos] = swapIdx;
-        state.order[state.pos + 1] = idx;
-        idx = swapIdx;
-      }
-
-      state.pos += 1;
-      state.lastIndex = idx;
-      saveState(state);
+      const answers = shuffle([correct, ...incorrect]).slice(0,4);
+      const correctIndex = answers.indexOf(correct);
 
       return {
-        q: bank[idx],
-        pos: state.pos,
-        total: n
+        category,
+        question,
+        answers,
+        correct: correctIndex < 0 ? 0 : correctIndex
       };
     }
 
-    function renderQuestion(q, pos, total){
-      elCat.textContent = q.category || "Category";
+    async function fetchBatch(){
+      const url = new URL(CFG.apiBase);
+      Object.entries(CFG.apiParams).forEach(([k,v]) => url.searchParams.set(k, v));
 
-      if (SHOW_COUNTER){
-        elCount.style.display = "";
-        elCount.textContent = pos + " of " + total;
-      } else {
-        elCount.style.display = "none";
+      const res = await fetch(url.toString(), { cache: "no-store" });
+      if (!res.ok) throw new Error("API request failed: " + res.status);
+
+      const data = await res.json();
+      if (!data || !Array.isArray(data.results)) throw new Error("Bad API response");
+
+      const items = data.results.map(normalizeApiItem);
+
+      // filter repeats
+      let added = 0;
+      for (const q of items){
+        const key = makeKey(q);
+        if (used.has(key)) continue;
+        used.add(key);
+        queue.push(q);
+        added++;
       }
+      saveUsedSet(used);
+      return added;
+    }
+
+    let fetching = false;
+    async function topUp(){
+      if (fetching) return;
+      if (queue.length >= CFG.bufferTarget) return;
+
+      fetching = true;
+      try{
+        elStatus.textContent = CFG.showAttributionInStatus
+          ? "Auto trivia running (questions via Open Trivia DB)"
+          : "Auto trivia running";
+
+        // try a few times quickly to fill buffer
+        let tries = 0;
+        while (queue.length < CFG.bufferTarget && tries < 6){
+          tries++;
+          const added = await fetchBatch();
+          // If added nothing (all repeats), keep trying
+          if (added === 0) continue;
+        }
+      }catch(e){
+        showError(String(e.message || e));
+      }finally{
+        fetching = false;
+      }
+    }
+
+    function render(q){
+      shownCount++;
+      elCat.textContent = q.category || "Trivia";
+      elCount.textContent = CFG.counterPrefix + " " + shownCount;
+      elBuf.textContent = "Buffer " + queue.length;
 
       elQ.textContent = q.question || "Question";
-      const answers = Array.isArray(q.answers) ? q.answers.slice(0,4) : ["A","B","C","D"];
-      const correct = typeof q.correct === "number" ? q.correct : 0;
 
       elAnsWrap.innerHTML = "";
       for (let i = 0; i < 4; i++){
@@ -316,85 +397,65 @@
         b.className = "badge";
         b.textContent = letters[i];
         const t = document.createElement("div");
-        t.textContent = answers[i] ?? "";
+        t.textContent = q.answers[i] || "";
         div.appendChild(b);
         div.appendChild(t);
         elAnsWrap.appendChild(div);
       }
-
-      return correct;
+      return q.correct || 0;
     }
 
     function clearHighlights(){
-      const items = elAnsWrap.querySelectorAll(".ans");
-      items.forEach(x => { x.classList.remove("good"); x.classList.remove("bad"); });
+      elAnsWrap.querySelectorAll(".ans").forEach(x=>{
+        x.classList.remove("good"); x.classList.remove("bad");
+      });
     }
 
     function reveal(correctIndex){
-      const items = elAnsWrap.querySelectorAll(".ans");
-      items.forEach((x, i) => {
+      elAnsWrap.querySelectorAll(".ans").forEach((x,i)=>{
         if (i === correctIndex) x.classList.add("good");
         else x.classList.add("bad");
       });
     }
 
-    function sleep(ms){
-      return new Promise(r => setTimeout(r, ms));
-    }
+    function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
 
-    async function loop(bank){
-      elStatus.textContent = "Automated rotation through full bank";
+    async function run(){
+      await topUp();
+
+      // If still empty, show a clear error
+      if (queue.length === 0){
+        showError("Queue is empty. The trivia API may be blocked by a network filter. Try again on a different network.");
+        return;
+      }
+
       while (true){
+        await topUp();
+
+        const q = queue.shift();
+        if (!q) { await sleep(500); continue; }
+
         clearHighlights();
         elBar.style.width = "0%";
-        elSoon.textContent = "Reveal soon";
+        elPhase.textContent = "Reveal soon";
 
-        const { q, pos, total } = nextQuestion(bank);
-        const correctIndex = renderQuestion(q, pos, total);
+        const correctIndex = render(q);
 
-        // Countdown bar
-        const start = Date.now();
-        while (Date.now() - start < SETTINGS.thinkMs){
-          const p = Math.min(1, (Date.now() - start) / SETTINGS.thinkMs);
+        const start = performance.now();
+        while (performance.now() - start < CFG.thinkMs){
+          const p = Math.min(1, (performance.now() - start) / CFG.thinkMs);
           elBar.style.width = (p * 100).toFixed(1) + "%";
-          await sleep(SETTINGS.tickMs);
+          await sleep(CFG.tickMs);
         }
 
         reveal(correctIndex);
-        elSoon.textContent = "Answer revealed";
+        elPhase.textContent = "Answer revealed";
 
-        await sleep(SETTINGS.revealMs);
+        await sleep(CFG.revealMs);
       }
     }
 
-    // Boot
-    (function init(){
-      // hard fail fast if questions.js never created the bank
-      const waitMs = 2500;
-      const t0 = Date.now();
-
-      function check(){
-        const bank = window.TRIVIA_BANK;
-        if (Array.isArray(bank) && bank.length > 0){
-          // sanity check for 2000
-          if (bank.length < 500){
-            showError("TRIVIA_BANK loaded but looks too small. It is " + bank.length + ". Your questions.js may not be generating the full bank.");
-            return;
-          }
-          loop(bank);
-          return;
-        }
-
-        if (Date.now() - t0 > waitMs){
-          showError("TRIVIA_BANK is not available. That means questions.js did not load or it crashed. Open this URL in a new tab and tell me if it loads or 404s: /Trivia-overlay/questions.js");
-          return;
-        }
-
-        requestAnimationFrame(check);
-      }
-
-      check();
-    })();
+    run();
   </script>
 </body>
 </html>
