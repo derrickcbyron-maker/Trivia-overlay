@@ -101,7 +101,7 @@ function shuffle(arr){
 
 function showQuestion(){
   const item = QUESTIONS[index];
-  counter.textContent = "Q " + (index+1);
+  counter.textContent = (index + 1) + " of " + QUESTIONS.length;
   qEl.textContent = item.q;
 
   const answers = item.a.map((t,i)=>({text:t,correct:i===item.c}));
