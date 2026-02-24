@@ -1,340 +1,478 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Derrick C Byron Trivia Overlay</title>
   <style>
-    html, body {
-      margin: 0;
+    :root{
+      /* Quick styling knobs */
+      --overlay-width: min(1200px, 94vw);
+      --radius: 28px;
+
+      /* Glass look */
+      --panel-bg: rgba(12, 14, 20, 0.42);
+      --panel-border: rgba(255, 255, 255, 0.12);
+      --panel-shadow: 0 18px 60px rgba(0,0,0,0.45);
+
+      /* Text */
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.70);
+
+      /* Accents */
+      --accent: rgba(140, 180, 255, 0.95);
+      --accent-2: rgba(160, 120, 255, 0.95);
+      --correct: rgba(90, 220, 160, 0.95);
+
+      /* Options */
+      --option-bg: rgba(255,255,255,0.08);
+      --option-border: rgba(255,255,255,0.10);
+      --option-hover: rgba(255,255,255,0.12);
+      --option-correct: rgba(90, 220, 160, 0.18);
+
+      /* Progress */
+      --bar-bg: rgba(255,255,255,0.12);
+      --bar-fill: linear-gradient(90deg, rgba(140,180,255,0.95), rgba(160,120,255,0.95));
+    }
+
+    html, body{
       height: 100%;
+      margin: 0;
       background: transparent;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* This keeps it overlay friendly */
+    body{
+      display: grid;
+      place-items: center;
+      padding: 2vh 2vw;
+      color: var(--text);
+    }
+
+    .panel{
+      width: var(--overlay-width);
+      border-radius: var(--radius);
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      box-shadow: var(--panel-shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       overflow: hidden;
     }
 
-    .overlay {
-      position: fixed;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      padding: 40px;
-    }
-
-    .card {
-      width: min(1100px, 92vw);
-      border-radius: 28px;
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.12);
-      box-shadow: 0 20px 80px rgba(0,0,0,0.45);
-      padding: 34px 34px 28px;
-      color: rgba(255,255,255,0.95);
-    }
-
-    .top {
+    .header{
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
-    .brand {
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      font-size: 18px;
-      opacity: 0.95;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.14);
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-size: 14px;
-      opacity: 0.95;
-    }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 99px;
-      background: rgba(255,255,255,0.8);
-      opacity: 0.7;
-    }
-
-    .question {
-      font-size: clamp(26px, 3.1vw, 44px);
-      line-height: 1.12;
-      font-weight: 800;
-      margin: 10px 0 18px;
-    }
-
-    .answers {
-      display: grid;
-      grid-template-columns: 1fr;
       gap: 12px;
-      margin-top: 12px;
+      padding: 18px 22px 10px 22px;
     }
 
-    .ans {
+    .brand{
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 16px 18px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      font-size: clamp(16px, 1.5vw, 20px);
-    }
-
-    .ans strong {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      background: rgba(0,0,0,0.35);
-      border: 1px solid rgba(255,255,255,0.14);
-      font-weight: 900;
-      letter-spacing: 0.5px;
-      margin-right: 12px;
-      flex: 0 0 auto;
-    }
-
-    .ans .left {
-      display: flex;
-      align-items: center;
-      gap: 0;
+      flex-direction: column;
+      gap: 4px;
       min-width: 0;
     }
 
-    .ans .text {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      opacity: 0.95;
+    .brand .name{
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      font-size: 16px;
+      color: var(--muted);
     }
 
-    .status {
-      margin-top: 18px;
+    .brand .mode{
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, rgba(140,180,255,0.95), rgba(160,120,255,0.95));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .pillRow{
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      font-size: 15px;
-      opacity: 0.9;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
 
-    .bar {
-      position: relative;
-      height: 10px;
+    .pill{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.10);
       border: 1px solid rgba(255,255,255,0.12);
-      overflow: hidden;
-      flex: 1;
-    }
-
-    .fill {
-      position: absolute;
-      inset: 0;
-      width: 0%;
-      background: rgba(255,255,255,0.85);
-      opacity: 0.55;
-    }
-
-    .reveal {
-      margin-top: 14px;
-      padding: 14px 16px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.14);
-      display: none;
-      font-size: 16px;
-    }
-
-    .reveal span {
-      font-weight: 900;
-    }
-
-    .hint {
+      background: rgba(0,0,0,0.22);
       font-size: 13px;
-      opacity: 0.6;
+      color: var(--muted);
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .dot{
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 18px rgba(140,180,255,0.65);
+    }
+
+    .category{
+      font-weight: 700;
+      color: rgba(255,255,255,0.86);
+    }
+
+    .content{
+      padding: 6px 22px 18px 22px;
+    }
+
+    .question{
+      font-size: clamp(24px, 3.2vw, 44px);
+      line-height: 1.12;
+      font-weight: 900;
+      letter-spacing: 0.2px;
+      margin: 6px 0 14px 0;
+    }
+
+    .options{
+      display: grid;
+      gap: 10px;
       margin-top: 10px;
     }
 
-    .fade {
-      animation: fadeIn 450ms ease both;
+    .opt{
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--option-border);
+      background: var(--option-bg);
+      transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+      user-select: none;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    .opt:hover{
+      background: var(--option-hover);
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.16);
+    }
+
+    .badge{
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      color: rgba(255,255,255,0.92);
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.10);
+      flex: 0 0 auto;
+    }
+
+    .optText{
+      font-size: 18px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.90);
+      flex: 1 1 auto;
+      min-width: 0;
+      word-break: break-word;
+    }
+
+    .footer{
+      padding: 14px 22px 18px 22px;
+      display: grid;
+      gap: 10px;
+      border-top: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.16);
+    }
+
+    .progressRow{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .bar{
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--bar-bg);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .fill{
+      height: 100%;
+      width: 0%;
+      background: var(--bar-fill);
+      border-radius: 999px;
+      transition: width 100ms linear;
+    }
+
+    .reveal{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.86);
+    }
+
+    .answerTag{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(90, 220, 160, 0.12);
+      color: rgba(255,255,255,0.92);
+      font-weight: 800;
+    }
+
+    .answerDot{
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--correct);
+      box-shadow: 0 0 18px rgba(90,220,160,0.60);
+    }
+
+    .hidden{
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+
+    .shown{
+      opacity: 1;
+      transform: translateY(0px);
+      pointer-events: auto;
+    }
+
+    .correct{
+      background: var(--option-correct);
+      border-color: rgba(90, 220, 160, 0.35);
+    }
+
+    .note{
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
     }
   </style>
 </head>
+
 <body>
-  <div class="overlay">
-    <div class="card fade">
-      <div class="top">
-        <div class="brand">Derrick C Byron</div>
-        <div class="pill"><span class="dot"></span><span id="mode">Question</span> • <span id="timer">20</span>s</div>
+  <div class="panel" id="panel">
+    <div class="header">
+      <div class="brand">
+        <div class="name">Derrick C Byron</div>
+        <div class="mode">Cinematic 24 7 trivia</div>
       </div>
 
-      <div id="q" class="question">Loading trivia…</div>
+      <div class="pillRow">
+        <div class="pill">
+          <span class="dot"></span>
+          <span class="category" id="categoryLabel">Category</span>
+        </div>
+        <div class="pill" id="phasePill">Question</div>
+        <div class="pill"><span id="countdown">10</span>s</div>
+      </div>
+    </div>
 
-      <div class="answers">
-        <div class="ans" id="a1"><div class="left"><strong>A</strong><div class="text" id="t1"></div></div></div>
-        <div class="ans" id="a2"><div class="left"><strong>B</strong><div class="text" id="t2"></div></div></div>
-        <div class="ans" id="a3"><div class="left"><strong>C</strong><div class="text" id="t3"></div></div></div>
-        <div class="ans" id="a4"><div class="left"><strong>D</strong><div class="text" id="t4"></div></div></div>
+    <div class="content">
+      <div class="question" id="questionText">Loading</div>
+
+      <div class="options" id="options"></div>
+    </div>
+
+    <div class="footer">
+      <div class="progressRow">
+        <div id="hintText">Answer in your head</div>
+        <div id="statusText">Reveal soon</div>
       </div>
 
-      <div class="reveal" id="revealBox">
-        Answer: <span id="revealText"></span>
+      <div class="bar">
+        <div class="fill" id="fill"></div>
       </div>
 
-      <div class="status">
-        <div style="min-width: 140px" id="statusText">New question</div>
-        <div class="bar"><div class="fill" id="fill"></div></div>
-        <div style="min-width: 110px; text-align:right" id="nextText">Next soon</div>
+      <div class="reveal hidden" id="revealRow">
+        <div class="answerTag">
+          <span class="answerDot"></span>
+          <span id="answerText">Answer</span>
+        </div>
+        <div class="note">Tip: use as a browser source overlay</div>
       </div>
-
-      <div class="hint">Tip: this page is meant to be used as a browser source overlay.</div>
     </div>
   </div>
 
   <script>
-    // Simple built-in trivia bank (we can expand this later)
-    const trivia = [
-      {
-        q: "Which planet is known as the Red Planet?",
-        a: ["Mars", "Jupiter", "Venus", "Mercury"],
-        correct: "A"
-      },
-      {
-        q: "What is the closest star to Earth?",
-        a: ["Sirius", "The Sun", "Alpha Centauri", "Betelgeuse"],
-        correct: "B"
-      },
-      {
-        q: "Which note is the 5th in a C major scale?",
-        a: ["D", "E", "F", "G"],
-        correct: "D"
-      },
-      {
-        q: "Which element has the chemical symbol O?",
-        a: ["Gold", "Osmium", "Oxygen", "Iron"],
-        correct: "C"
-      },
-      {
-        q: "What galaxy is Earth located in?",
-        a: ["Andromeda", "Milky Way", "Sombrero", "Whirlpool"],
-        correct: "B"
-      }
+    /* Timing */
+    const config = {
+      questionSeconds: 12,
+      revealSeconds: 6,
+      shuffleOnStart: true,
+      reshuffleOnLoop: true
+    };
+
+    /* Question bank
+       Add as many as you want. Keep correct as the exact string in options.
+    */
+    let questions = [
+      { cat: "Science", q: "Which element has the chemical symbol O?", options: ["Gold","Osmium","Oxygen","Iron"], correct: "Oxygen" },
+      { cat: "Space", q: "What galaxy do we live in?", options: ["Andromeda","Milky Way","Sombrero","Whirlpool"], correct: "Milky Way" },
+      { cat: "History", q: "Which ancient civilization built the pyramids of Giza?", options: ["Romans","Egyptians","Vikings","Persians"], correct: "Egyptians" },
+      { cat: "Music", q: "How many strings does a standard guitar have?", options: ["4","5","6","7"], correct: "6" },
+      { cat: "Geography", q: "Which is the largest ocean on Earth?", options: ["Atlantic","Indian","Arctic","Pacific"], correct: "Pacific" },
+      { cat: "Movies", q: "What is the name of the wizard school in Harry Potter?", options: ["Hogwarts","Durmstrang","Beauxbatons","Ilvermorny"], correct: "Hogwarts" },
+      { cat: "Astronomy", q: "What is the name of our star?", options: ["Polaris","Sirius","The Sun","Betelgeuse"], correct: "The Sun" },
+      { cat: "Science", q: "Water freezes at what temperature in Celsius?", options: ["0","10","32","100"], correct: "0" },
+      { cat: "History", q: "Who was the first President of the United States?", options: ["John Adams","George Washington","Thomas Jefferson","James Madison"], correct: "George Washington" },
+      { cat: "Space", q: "Which planet is known as the Red Planet?", options: ["Mars","Jupiter","Venus","Mercury"], correct: "Mars" },
+      { cat: "Music", q: "What is the musical term for a gradual increase in volume?", options: ["Staccato","Crescendo","Legato","Fermata"], correct: "Crescendo" },
+      { cat: "Geography", q: "Which country has the city of Tokyo?", options: ["China","Japan","South Korea","Thailand"], correct: "Japan" }
     ];
 
-    const qEl = document.getElementById("q");
-    const t1 = document.getElementById("t1");
-    const t2 = document.getElementById("t2");
-    const t3 = document.getElementById("t3");
-    const t4 = document.getElementById("t4");
+    const el = {
+      category: document.getElementById("categoryLabel"),
+      phasePill: document.getElementById("phasePill"),
+      countdown: document.getElementById("countdown"),
+      question: document.getElementById("questionText"),
+      options: document.getElementById("options"),
+      fill: document.getElementById("fill"),
+      revealRow: document.getElementById("revealRow"),
+      answerText: document.getElementById("answerText"),
+      hintText: document.getElementById("hintText"),
+      statusText: document.getElementById("statusText")
+    };
 
-    const modeEl = document.getElementById("mode");
-    const timerEl = document.getElementById("timer");
-    const statusText = document.getElementById("statusText");
-    const nextText = document.getElementById("nextText");
-    const fill = document.getElementById("fill");
-
-    const revealBox = document.getElementById("revealBox");
-    const revealText = document.getElementById("revealText");
-
-    const questionSeconds = 20;   // time viewers see the question
-    const revealSeconds = 6;      // time answer is shown
-    const gapSeconds = 2;         // short gap before next question
-
-    let current = null;
-    let phase = "question"; // question | reveal | gap
-    let remaining = questionSeconds;
-    let tickHandle = null;
-
-    function pickQuestion() {
-      current = trivia[Math.floor(Math.random() * trivia.length)];
-      qEl.textContent = current.q;
-      t1.textContent = current.a[0];
-      t2.textContent = current.a[1];
-      t3.textContent = current.a[2];
-      t4.textContent = current.a[3];
-      revealBox.style.display = "none";
-      revealText.textContent = "";
+    function shuffle(array){
+      for(let i = array.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
     }
 
-    function setPhase(newPhase) {
-      phase = newPhase;
+    function renderQuestion(item){
+      el.category.textContent = item.cat;
+      el.question.textContent = item.q;
 
-      if (phase === "question") {
-        modeEl.textContent = "Question";
-        statusText.textContent = "Answer in your head";
-        nextText.textContent = "Reveal soon";
-        remaining = questionSeconds;
-        fill.style.width = "0%";
-        pickQuestion();
-      }
+      el.options.innerHTML = "";
+      const letters = ["A","B","C","D"];
 
-      if (phase === "reveal") {
-        modeEl.textContent = "Answer";
-        statusText.textContent = "Answer revealed";
-        nextText.textContent = "Next question";
-        remaining = revealSeconds;
+      item.options.forEach((opt, idx) => {
+        const row = document.createElement("div");
+        row.className = "opt";
+        row.setAttribute("data-opt", opt);
 
-        const map = { A: current.a[0], B: current.a[1], C: current.a[2], D: current.a[3] };
-        revealText.textContent = current.correct + " • " + map[current.correct];
-        revealBox.style.display = "block";
-        fill.style.width = "100%";
-      }
+        const badge = document.createElement("div");
+        badge.className = "badge";
+        badge.textContent = letters[idx] || "";
 
-      if (phase === "gap") {
-        modeEl.textContent = "Next";
-        statusText.textContent = "Get ready";
-        nextText.textContent = "Starting";
-        remaining = gapSeconds;
-        revealBox.style.display = "none";
-        fill.style.width = "0%";
-      }
+        const text = document.createElement("div");
+        text.className = "optText";
+        text.textContent = opt;
 
-      timerEl.textContent = remaining;
+        row.appendChild(badge);
+        row.appendChild(text);
+        el.options.appendChild(row);
+      });
+
+      el.revealRow.classList.remove("shown");
+      el.revealRow.classList.add("hidden");
+      el.answerText.textContent = "Answer";
+      el.hintText.textContent = "Answer in your head";
+      el.statusText.textContent = "Reveal soon";
+
+      Array.from(el.options.children).forEach(x => x.classList.remove("correct"));
     }
 
-    function step() {
-      remaining -= 1;
-      if (remaining < 0) remaining = 0;
-      timerEl.textContent = remaining;
+    function highlightCorrect(correct){
+      const rows = Array.from(el.options.children);
+      rows.forEach(r => {
+        if(r.getAttribute("data-opt") === correct){
+          r.classList.add("correct");
+        }
+      });
+    }
 
-      if (phase === "question") {
-        const pct = ((questionSeconds - remaining) / questionSeconds) * 100;
-        fill.style.width = pct.toFixed(0) + "%";
-      }
+    let idx = 0;
+    let phase = "question";
+    let remaining = config.questionSeconds;
+    let total = config.questionSeconds;
 
-      if (remaining === 0) {
-        if (phase === "question") return setPhase("reveal");
-        if (phase === "reveal") return setPhase("gap");
-        if (phase === "gap") return setPhase("question");
+    function setPhase(next){
+      phase = next;
+
+      if(phase === "question"){
+        el.phasePill.textContent = "Question";
+        remaining = config.questionSeconds;
+        total = config.questionSeconds;
+        el.revealRow.classList.remove("shown");
+        el.revealRow.classList.add("hidden");
+      } else {
+        el.phasePill.textContent = "Reveal";
+        remaining = config.revealSeconds;
+        total = config.revealSeconds;
+        el.revealRow.classList.remove("hidden");
+        el.revealRow.classList.add("shown");
+        el.hintText.textContent = "Correct answer";
+        el.statusText.textContent = "Next question soon";
       }
     }
 
-    function start() {
+    function nextQuestion(){
+      if(idx >= questions.length){
+        idx = 0;
+        if(config.reshuffleOnLoop) shuffle(questions);
+      }
+      const item = questions[idx];
+      renderQuestion(item);
       setPhase("question");
-      if (tickHandle) clearInterval(tickHandle);
-      tickHandle = setInterval(step, 1000);
+      idx += 1;
     }
 
-    start();
+    function revealAnswer(){
+      const current = questions[idx - 1];
+      el.answerText.textContent = current.correct;
+      highlightCorrect(current.correct);
+      setPhase("reveal");
+    }
+
+    function tick(){
+      remaining -= 0.1;
+      if(remaining < 0) remaining = 0;
+
+      el.countdown.textContent = Math.ceil(remaining).toString();
+      const pct = ((total - remaining) / total) * 100;
+      el.fill.style.width = Math.min(100, Math.max(0, pct)) + "%";
+
+      if(remaining <= 0.001){
+        if(phase === "question"){
+          revealAnswer();
+        } else {
+          nextQuestion();
+        }
+      }
+    }
+
+    if(config.shuffleOnStart) shuffle(questions);
+    nextQuestion();
+    setInterval(tick, 100);
   </script>
 </body>
 </html>
