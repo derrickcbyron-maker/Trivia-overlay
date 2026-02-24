@@ -2,760 +2,282 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Derrick C Byron Cinematic 24/7 Trivia</title>
   <style>
     :root{
       --bg:#0b0f14;
-      --card:#121923;
-      --card2:#0f1620;
-      --text:#eaf0ff;
-      --muted:#a9b3c9;
-      --chip:#1b2535;
-      --border:rgba(255,255,255,.08);
-      --good:#20c05c;
-      --bad:#d44848;
-      --shadow:0 18px 55px rgba(0,0,0,.55);
-      --r:22px;
+      --card:rgba(20,25,33,.72);
+      --stroke:rgba(255,255,255,.14);
+      --text:rgba(255,255,255,.94);
+      --muted:rgba(255,255,255,.68);
+      --good:rgba(64, 255, 160,.25);
+      --bad:rgba(255, 64, 96,.18);
     }
-    html,body{height:100%}
-    body{
-      margin:0;
-      background: radial-gradient(1200px 600px at 50% 60%, rgba(88,120,255,.12), transparent 55%),
-                  radial-gradient(900px 500px at 70% 20%, rgba(0,255,200,.08), transparent 55%),
-                  radial-gradient(900px 500px at 30% 20%, rgba(255,0,140,.08), transparent 55%),
-                  linear-gradient(180deg, #0a0e14, #06080c);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    html,body{height:100%;margin:0;background:transparent;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+    body{display:flex;align-items:center;justify-content:center}
+    .wrap{
+      width:min(1200px, 92vw);
+      background:var(--card);
+      border:1px solid var(--stroke);
+      border-radius:18px;
+      padding:18px 18px 14px 18px;
+      backdrop-filter: blur(10px);
       color:var(--text);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:32px;
-      box-sizing:border-box;
+      box-shadow:0 20px 60px rgba(0,0,0,.35);
     }
-    .wrap{width:min(1250px, 100%);}
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid var(--border);
-      border-radius:var(--r);
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      overflow:hidden;
-    }
-    .inner{padding:22px 24px 18px 24px;}
     .top{
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:space-between;
       gap:12px;
-      margin-bottom:6px;
+      margin-bottom:10px;
     }
-    .brand{
-      font-weight:800;
-      letter-spacing:.2px;
-      color:#dfe8ff;
+    .title{
+      font-weight:700;
       font-size:16px;
-      opacity:.95;
+      line-height:1.2;
     }
-    .sub{
-      margin-top:2px;
-      color:var(--muted);
-      font-size:12px;
-      opacity:.95;
-    }
-    .chips{display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
+    .sub{color:var(--muted);font-size:12px;margin-top:2px}
+    .chips{display:flex;gap:10px;align-items:center}
     .chip{
       font-size:12px;
-      padding:7px 11px;
+      color:var(--muted);
+      border:1px solid var(--stroke);
       border-radius:999px;
-      background:rgba(0,0,0,.25);
-      border:1px solid var(--border);
-      color:#d7e3ff;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
+      padding:6px 10px;
+      background:rgba(255,255,255,.04);
       white-space:nowrap;
     }
-    .chip b{font-weight:800}
-    .q{
-      margin:12px 0 16px 0;
-      font-size:52px;
+
+    .question{
+      font-size: clamp(28px, 4.2vw, 54px);
+      font-weight:800;
       line-height:1.05;
-      font-weight:900;
-      letter-spacing:-.6px;
-      text-shadow:0 10px 26px rgba(0,0,0,.45);
+      letter-spacing:-0.02em;
+      margin:6px 0 14px 0;
+      min-height: 2.2em; /* prevents resize jump */
+      display:flex;
+      align-items:flex-end;
     }
-    @media (max-width:900px){
-      .q{font-size:34px}
-    }
+
     .grid{
       display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-    }
-    @media (max-width:780px){
-      .grid{grid-template-columns:1fr}
+      grid-template-columns: 1fr 1fr;
+      gap:10px 12px;
+      margin-bottom:12px;
     }
     .ans{
-      position:relative;
-      border-radius:16px;
-      background:rgba(0,0,0,.22);
-      border:1px solid var(--border);
-      padding:14px 16px;
       display:flex;
       align-items:center;
-      gap:12px;
-      min-height:52px;
-      box-sizing:border-box;
+      gap:10px;
+      padding:14px 14px;
+      border:1px solid var(--stroke);
+      border-radius:14px;
+      background:rgba(255,255,255,.04);
+      font-size:16px;
+      min-height:54px;
       overflow:hidden;
     }
     .badge{
-      width:28px; height:28px;
-      display:grid; place-items:center;
+      width:28px;height:28px;
       border-radius:10px;
-      background:rgba(255,255,255,.06);
-      border:1px solid var(--border);
-      color:#dce6ff;
-      font-weight:900;
+      border:1px solid var(--stroke);
+      display:flex;align-items:center;justify-content:center;
+      color:var(--muted);
+      font-weight:700;
       flex:0 0 auto;
+      background:rgba(255,255,255,.03);
     }
-    .txt{
-      font-size:16px;
-      font-weight:750;
-      color:#eaf0ff;
+    .ans.good{background:var(--good);border-color:rgba(64,255,160,.35)}
+    .ans.bad{background:var(--bad);border-color:rgba(255,64,96,.30)}
+    .ans span{
+      white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
-      white-space:nowrap;
+      display:block;
+      width:100%;
     }
-    .ans.good{border-color:rgba(32,192,92,.55); box-shadow: 0 0 0 2px rgba(32,192,92,.15) inset;}
-    .ans.bad{border-color:rgba(212,72,72,.55); box-shadow: 0 0 0 2px rgba(212,72,72,.12) inset; opacity:.95;}
+
     .bottom{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:14px;
-      margin-top:14px;
+      gap:12px;
+      color:var(--muted);
+      font-size:12px;
     }
-    .hint{color:var(--muted); font-size:12px;}
     .bar{
-      width:100%;
-      height:10px;
+      flex:1;
+      height:8px;
       border-radius:999px;
-      background:rgba(0,0,0,.28);
-      border:1px solid var(--border);
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.04);
       overflow:hidden;
     }
     .fill{
       height:100%;
       width:0%;
-      border-radius:999px;
-      background:linear-gradient(90deg, rgba(79,183,255,.95), rgba(167,103,255,.95), rgba(255,90,190,.95));
+      background:linear-gradient(90deg, #45c3ff, #b56bff, #ff5bbd);
       transition:width 80ms linear;
     }
-    .rightHint{color:var(--muted); font-size:12px; white-space:nowrap;}
+    .rightHint{white-space:nowrap}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="card">
-      <div class="inner">
-        <div class="top">
-          <div>
-            <div class="brand">Derrick C Byron Cinematic 24/7 Trivia</div>
-            <div class="sub" id="subline">Automated rotation through full bank</div>
-          </div>
-          <div class="chips">
-            <div class="chip"><span id="catChip">Loading</span></div>
-            <div class="chip"><b id="countChip">0</b><span id="countOf">of 0</span></div>
-          </div>
-        </div>
-
-        <div class="q" id="questionText">Loading</div>
-
-        <div class="grid" id="answers">
-          <div class="ans"><div class="badge">A</div><div class="txt">Loading</div></div>
-          <div class="ans"><div class="badge">B</div><div class="txt">Loading</div></div>
-          <div class="ans"><div class="badge">C</div><div class="txt">Loading</div></div>
-          <div class="ans"><div class="badge">D</div><div class="txt">Loading</div></div>
-        </div>
-
-        <div class="bottom">
-          <div class="hint" id="metaLine">Answer in your head</div>
-          <div class="bar"><div class="fill" id="barFill"></div></div>
-          <div class="rightHint" id="rightLine">Reveal soon</div>
-        </div>
+    <div class="top">
+      <div>
+        <div class="title">Derrick C Byron Cinematic 24/7 Trivia</div>
+        <div class="sub">Automated rotation through full bank</div>
       </div>
+      <div class="chips">
+        <div class="chip" id="catChip">Loading</div>
+        <div class="chip" id="countChip">0 of 0</div>
+      </div>
+    </div>
+
+    <div class="question" id="qText">Loading</div>
+
+    <div class="grid" id="answers">
+      <div class="ans"><div class="badge">A</div><span>Loading</span></div>
+      <div class="ans"><div class="badge">B</div><span>Loading</span></div>
+      <div class="ans"><div class="badge">C</div><span>Loading</span></div>
+      <div class="ans"><div class="badge">D</div><span>Loading</span></div>
+    </div>
+
+    <div class="bottom">
+      <div>Answer in your head</div>
+      <div class="bar"><div class="fill" id="fill"></div></div>
+      <div class="rightHint" id="hint">Reveal soon</div>
     </div>
   </div>
 
-<script>
-(() => {
-  const STORAGE_KEY = "dcbyron_trivia_state_v4";
+  <!-- IMPORTANT: keep this, this is what loads the 2000 bank -->
+  <script src="./questions.js?v=4"></script>
 
-  const SETTINGS = {
-    totalQuestions: 2000,
-    thinkMs: 9000,
-    revealMs: 2500,
-    tickMs: 50,
-    noImmediateRepeat: true
-  };
+  <script>
+    const STORAGE_KEY = "dcbyron_trivia_state_v4";
 
-  function mulberry32(seed) {
-    return function() {
-      let t = (seed += 0x6D2B79F5);
-      t = Math.imul(t ^ (t >>> 15), t | 1);
-      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    const elQ = document.getElementById("qText");
+    const elAnsWrap = document.getElementById("answers");
+    const elCat = document.getElementById("catChip");
+    const elCount = document.getElementById("countChip");
+    const elFill = document.getElementById("fill");
+    const elHint = document.getElementById("hint");
+
+    const LETTERS = ["A","B","C","D"];
+
+    const SETTINGS = {
+      thinkMs: 9000,
+      revealMs: 2500,
+      tickMs: 50
     };
-  }
 
-  function hashStringToSeed(str) {
-    let h = 2166136261 >>> 0;
-    for (let i = 0; i < str.length; i++) {
-      h ^= str.charCodeAt(i);
-      h = Math.imul(h, 16777619);
-    }
-    return h >>> 0;
-  }
-
-  function shuffleInPlace(arr, rnd) {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(rnd() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  }
-
-  function normalize(s) {
-    return String(s).trim().toLowerCase().replace(/\s+/g," ");
-  }
-
-  function isNumberLike(v) {
-    if (typeof v === "number") return true;
-    const s = String(v).trim();
-    return /^-?\d+(\.\d+)?$/.test(s);
-  }
-
-  function isYearLike(v) {
-    const s = String(v).trim();
-    if (!/^\d{4}$/.test(s)) return false;
-    const n = Number(s);
-    return n >= 1500 && n <= 2100;
-  }
-
-  function pick(arr, rnd) {
-    return arr[Math.floor(rnd() * arr.length)];
-  }
-
-  function uniq(arr) {
-    const seen = new Set();
-    const out = [];
-    for (const x of arr) {
-      const k = normalize(x);
-      if (seen.has(k)) continue;
-      seen.add(k);
-      out.push(x);
-    }
-    return out;
-  }
-
-  function makeWrongAnswers(correct, kind, rnd) {
-    const out = [];
-    const used = new Set([normalize(correct)]);
-    const cNum = Number(correct);
-
-    function add(v) {
-      const k = normalize(v);
-      if (used.has(k)) return false;
-      used.add(k);
-      out.push(String(v));
-      return true;
-    }
-
-    if (kind === "year") {
-      const base = Number(correct);
-      const deltas = [-30,-25,-20,-15,-12,-10,-8,-6,-4,-3,-2,2,3,4,6,8,10,12,15,20,25,30,40,50];
-      let guard = 0;
-      while (out.length < 3 && guard++ < 500) {
-        const d = pick(deltas, rnd);
-        const y = base + d;
-        if (y < 1500 || y > 2100) continue;
-        add(String(y));
+    function loadState(){
+      try{
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+      }catch(e){
+        return {};
       }
-      while (out.length < 3) add(String(base + (out.length+1)));
-      return out;
+    }
+    function saveState(state){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
-    if (kind === "number") {
-      const deltas = [-20,-15,-12,-10,-8,-6,-5,-4,-3,-2,2,3,4,5,6,8,10,12,15,20,25,30];
-      let guard = 0;
-      while (out.length < 3 && guard++ < 500) {
-        const d = pick(deltas, rnd);
-        const v = cNum + d;
-        if (!Number.isFinite(v)) continue;
-        add(String(v));
-      }
-      while (out.length < 3) add(String(cNum + (out.length+1)));
-      return out;
-    }
-
-    const fillers = [
-      "Alpha","Beta","Gamma","Delta","Epsilon",
-      "North","South","East","West",
-      "Prime","Nova","Apex","Vertex","Nimbus","Aurora",
-      "Silver","Gold","Iron","Copper","Zinc",
-      "Tokyo","Paris","Berlin","Madrid","Rome",
-      "Jaws","Titanic","Avatar","Rocky","Matrix",
-      "Violin","Piano","Guitar","Drums","Saxophone",
-      "Linux","Windows","Android","iOS","macOS"
-    ];
-
-    let guard = 0;
-    while (out.length < 3 && guard++ < 700) {
-      add(pick(fillers, rnd));
-    }
-    while (out.length < 3) add("Option " + (out.length + 1));
-    return out;
-  }
-
-  function makeQuestion(category, questionText, correctAnswer, wrongCandidates, rnd) {
-    const kind = isYearLike(correctAnswer) ? "year" : (isNumberLike(correctAnswer) ? "number" : "text");
-
-    let wrongs = [];
-    if (wrongCandidates && wrongCandidates.length) {
-      const pool = uniq(wrongCandidates.map(String)).filter(x => normalize(x) !== normalize(correctAnswer));
-      if (kind === "year") {
-        const yPool = pool.filter(isYearLike);
-        wrongs = shuffleInPlace(yPool.slice(), rnd).slice(0, 3);
-      } else if (kind === "number") {
-        const nPool = pool.filter(isNumberLike);
-        wrongs = shuffleInPlace(nPool.slice(), rnd).slice(0, 3);
-      } else {
-        wrongs = shuffleInPlace(pool.slice(), rnd).slice(0, 3);
+    function ensureBank(){
+      if (!window.TRIVIA_BANK || !Array.isArray(window.TRIVIA_BANK) || window.TRIVIA_BANK.length < 1000) {
+        // If this triggers, you are not loading questions.js correctly
+        elQ.textContent = "Bank failed to load";
+        elCat.textContent = "Error";
+        elCount.textContent = "0 of 0";
+        elHint.textContent = "Check questions.js";
+        throw new Error("TRIVIA_BANK missing or too small");
       }
     }
 
-    if (wrongs.length < 3) {
-      const autoWrongs = makeWrongAnswers(correctAnswer, kind === "text" ? "text" : kind, rnd);
-      for (const w of autoWrongs) {
-        if (wrongs.length >= 3) break;
-        if (normalize(w) !== normalize(correctAnswer) && !wrongs.some(x => normalize(x) === normalize(w))) wrongs.push(w);
+    function renderQuestion(q, idx, total){
+      elCat.textContent = q.category || "General";
+      elCount.textContent = (idx + 1) + " of " + total;
+      elQ.textContent = q.question;
+
+      elAnsWrap.innerHTML = "";
+      for (let i = 0; i < 4; i++){
+        const row = document.createElement("div");
+        row.className = "ans";
+        row.innerHTML = '<div class="badge">'+LETTERS[i]+'</div><span></span>';
+        row.querySelector("span").textContent = q.answers[i] ?? "";
+        elAnsWrap.appendChild(row);
       }
     }
 
-    let answers = [String(correctAnswer), ...wrongs].slice(0,4);
-    answers = uniq(answers).slice(0,4);
-
-    while (answers.length < 4) {
-      const fill = makeWrongAnswers(correctAnswer, kind === "text" ? "text" : kind, rnd).pop();
-      if (!answers.some(x => normalize(x) === normalize(fill))) answers.push(fill);
+    function setRevealStyles(correctIndex){
+      const nodes = Array.from(elAnsWrap.children);
+      nodes.forEach((n, i) => {
+        n.classList.remove("good","bad");
+        n.classList.add(i === correctIndex ? "good" : "bad");
+      });
     }
 
-    shuffleInPlace(answers, rnd);
-    const correctIndex = answers.findIndex(a => normalize(a) === normalize(correctAnswer));
-
-    return {
-      category,
-      question: questionText,
-      answers,
-      correct: correctIndex
-    };
-  }
-
-  const DATA = {
-    geography: {
-      capitals: [
-        ["France","Paris"],["Spain","Madrid"],["Italy","Rome"],["Germany","Berlin"],["Portugal","Lisbon"],["Netherlands","Amsterdam"],
-        ["Belgium","Brussels"],["Switzerland","Bern"],["Austria","Vienna"],["Poland","Warsaw"],["Czech Republic","Prague"],
-        ["Hungary","Budapest"],["Greece","Athens"],["Turkey","Ankara"],["Ireland","Dublin"],["United Kingdom","London"],
-        ["Norway","Oslo"],["Sweden","Stockholm"],["Finland","Helsinki"],["Denmark","Copenhagen"],["Iceland","Reykjavik"],
-        ["Canada","Ottawa"],["Mexico","Mexico City"],["Brazil","Brasilia"],["Argentina","Buenos Aires"],["Chile","Santiago"],
-        ["Peru","Lima"],["Colombia","Bogota"],["Venezuela","Caracas"],["Ecuador","Quito"],["Bolivia","Sucre"],
-        ["China","Beijing"],["Japan","Tokyo"],["South Korea","Seoul"],["North Korea","Pyongyang"],["India","New Delhi"],
-        ["Pakistan","Islamabad"],["Bangladesh","Dhaka"],["Sri Lanka","Sri Jayawardenepura Kotte"],["Thailand","Bangkok"],
-        ["Vietnam","Hanoi"],["Malaysia","Kuala Lumpur"],["Singapore","Singapore"],["Indonesia","Jakarta"],
-        ["Philippines","Manila"],["Australia","Canberra"],["New Zealand","Wellington"],
-        ["Egypt","Cairo"],["Morocco","Rabat"],["Algeria","Algiers"],["Tunisia","Tunis"],["Libya","Tripoli"],
-        ["Nigeria","Abuja"],["Ghana","Accra"],["Kenya","Nairobi"],["Ethiopia","Addis Ababa"],["South Africa","Pretoria"],
-        ["Saudi Arabia","Riyadh"],["United Arab Emirates","Abu Dhabi"],["Israel","Jerusalem"],["Jordan","Amman"],["Iraq","Baghdad"],
-        ["Iran","Tehran"],["Qatar","Doha"],["Kuwait","Kuwait City"],["Oman","Muscat"],["Yemen","Sana'a"],
-        ["Russia","Moscow"],["Ukraine","Kyiv"],["Romania","Bucharest"],["Bulgaria","Sofia"],["Serbia","Belgrade"]
-      ],
-      usStates: [
-        ["Alabama","Montgomery"],["Alaska","Juneau"],["Arizona","Phoenix"],["Arkansas","Little Rock"],["California","Sacramento"],
-        ["Colorado","Denver"],["Connecticut","Hartford"],["Delaware","Dover"],["Florida","Tallahassee"],["Georgia","Atlanta"],
-        ["Hawaii","Honolulu"],["Idaho","Boise"],["Illinois","Springfield"],["Indiana","Indianapolis"],["Iowa","Des Moines"],
-        ["Kansas","Topeka"],["Kentucky","Frankfort"],["Louisiana","Baton Rouge"],["Maine","Augusta"],["Maryland","Annapolis"],
-        ["Massachusetts","Boston"],["Michigan","Lansing"],["Minnesota","Saint Paul"],["Mississippi","Jackson"],["Missouri","Jefferson City"],
-        ["Montana","Helena"],["Nebraska","Lincoln"],["Nevada","Carson City"],["New Hampshire","Concord"],["New Jersey","Trenton"],
-        ["New Mexico","Santa Fe"],["New York","Albany"],["North Carolina","Raleigh"],["North Dakota","Bismarck"],["Ohio","Columbus"],
-        ["Oklahoma","Oklahoma City"],["Oregon","Salem"],["Pennsylvania","Harrisburg"],["Rhode Island","Providence"],["South Carolina","Columbia"],
-        ["South Dakota","Pierre"],["Tennessee","Nashville"],["Texas","Austin"],["Utah","Salt Lake City"],["Vermont","Montpelier"],
-        ["Virginia","Richmond"],["Washington","Olympia"],["West Virginia","Charleston"],["Wisconsin","Madison"],["Wyoming","Cheyenne"]
-      ]
-    },
-    science: {
-      elements: [
-        ["H","Hydrogen"],["He","Helium"],["Li","Lithium"],["Be","Beryllium"],["B","Boron"],["C","Carbon"],["N","Nitrogen"],["O","Oxygen"],
-        ["F","Fluorine"],["Ne","Neon"],["Na","Sodium"],["Mg","Magnesium"],["Al","Aluminum"],["Si","Silicon"],["P","Phosphorus"],
-        ["S","Sulfur"],["Cl","Chlorine"],["Ar","Argon"],["K","Potassium"],["Ca","Calcium"],["Fe","Iron"],["Cu","Copper"],["Zn","Zinc"],
-        ["Ag","Silver"],["Au","Gold"],["Sn","Tin"],["I","Iodine"],["Pb","Lead"],["Hg","Mercury"],["U","Uranium"]
-      ],
-      planets: [
-        ["Which planet is known as the Red Planet?","Mars"],
-        ["Which planet is closest to the Sun?","Mercury"],
-        ["Which planet is known for its rings?","Saturn"],
-        ["Which planet is the largest in our Solar System?","Jupiter"],
-        ["Which planet is famous for its blue color?","Neptune"],
-        ["Which planet is often called Earths twin?","Venus"],
-        ["Which dwarf planet is in the asteroid belt?","Ceres"]
-      ]
-    },
-    history: {
-      yearFacts: [
-        ["In which year did the Berlin Wall fall?","1989"],
-        ["In which year did the Titanic sink?","1912"],
-        ["In which year did World War II end?","1945"],
-        ["In which year did the first man land on the Moon?","1969"],
-        ["In which year was the Declaration of Independence signed?","1776"],
-        ["In which year did the internet become publicly available in many places?","1991"]
-      ],
-      generalFacts: [
-        ["Who was the first President of the United States?","George Washington"],
-        ["What empire built the Colosseum?","Roman Empire"],
-        ["What was the name of the ship on the Mayflower voyage?","Mayflower"]
-      ]
-    },
-    movies: {
-      facts: [
-        ["Which movie features the quote I will be back?","The Terminator"],
-        ["Which movie features the character Darth Vader?","Star Wars"],
-        ["Which movie has the line Here's looking at you kid?","Casablanca"],
-        ["Which movie features the character Indiana Jones?","Raiders of the Lost Ark"],
-        ["Which movie features a shark terrorizing a beach town?","Jaws"]
-      ]
-    },
-    music: {
-      facts: [
-        ["How many strings does a standard guitar have?","6"],
-        ["How many keys are on a standard piano?","88"],
-        ["Which instrument has black and white keys?","Piano"],
-        ["Which instrument is played with a bow?","Violin"],
-        ["Which instrument is known for its reeds?","Saxophone"]
-      ]
-    },
-    sports: {
-      facts: [
-        ["How many players are on the field for one soccer team?","11"],
-        ["How many innings are in a standard baseball game?","9"],
-        ["How many points is a touchdown worth in American football?","6"],
-        ["Which sport uses a puck?","Hockey"],
-        ["Which sport features a slam dunk?","Basketball"]
-      ]
-    },
-    tech: {
-      facts: [
-        ["Which company makes the iPhone?","Apple"],
-        ["What does CPU stand for?","Central Processing Unit"],
-        ["What does URL stand for?","Uniform Resource Locator"],
-        ["Which operating system is open source and often used on servers?","Linux"],
-        ["What does WiFi commonly refer to?","Wireless networking"]
-      ]
-    },
-    general: {
-      facts: [
-        ["What is the hardest natural mineral?","Diamond"],
-        ["How many continents are there on Earth?","7"],
-        ["How many days are in a leap year?","366"],
-        ["Which element has the chemical symbol O?","Oxygen"],
-        ["Which ocean is the largest?","Pacific"]
-      ]
-    }
-  };
-
-  function buildBank(target) {
-    const seed = hashStringToSeed("derrickcbyron_trivia_v4");
-    const rnd = mulberry32(seed);
-
-    const bank = [];
-    const seenQ = new Set();
-
-    const pools = [];
-
-    const capitalPairs = DATA.geography.capitals;
-    pools.push(() => {
-      const [country, capital] = pick(capitalPairs, rnd);
-      const wrongs = shuffleInPlace(capitalPairs.map(x => x[1]).filter(x => x !== capital), rnd).slice(0, 20);
-      return makeQuestion("Geography", "What is the capital of " + country + "?", capital, wrongs, rnd);
-    });
-
-    const statePairs = DATA.geography.usStates;
-    pools.push(() => {
-      const [state, capital] = pick(statePairs, rnd);
-      const wrongs = shuffleInPlace(statePairs.map(x => x[1]).filter(x => x !== capital), rnd).slice(0, 20);
-      return makeQuestion("Geography", "What is the capital of " + state + "?", capital, wrongs, rnd);
-    });
-
-    const elemPairs = DATA.science.elements;
-    pools.push(() => {
-      const [sym, name] = pick(elemPairs, rnd);
-      const wrongs = shuffleInPlace(elemPairs.map(x => x[1]).filter(x => x !== name), rnd).slice(0, 20);
-      return makeQuestion("Science", "Which element has the chemical symbol " + sym + "?", name, wrongs, rnd);
-    });
-
-    pools.push(() => {
-      const [sym, name] = pick(elemPairs, rnd);
-      const wrongs = shuffleInPlace(elemPairs.map(x => x[0]).filter(x => x !== sym), rnd).slice(0, 20);
-      return makeQuestion("Science", "What is the chemical symbol for " + name + "?", sym, wrongs, rnd);
-    });
-
-    const planetPairs = DATA.science.planets;
-    pools.push(() => {
-      const [q, a] = pick(planetPairs, rnd);
-      const wrongs = ["Mercury","Venus","Earth","Mars","Jupiter","Saturn","Uranus","Neptune","Pluto"].filter(x => normalize(x) !== normalize(a));
-      return makeQuestion("Science", q, a, wrongs, rnd);
-    });
-
-    const yearPairs = DATA.history.yearFacts;
-    pools.push(() => {
-      const [q, a] = pick(yearPairs, rnd);
-      return makeQuestion("History", q, a, [], rnd);
-    });
-
-    const histFacts = DATA.history.generalFacts;
-    pools.push(() => {
-      const [q, a] = pick(histFacts, rnd);
-      const wrongs = histFacts.map(x => x[1]).filter(x => normalize(x) !== normalize(a));
-      return makeQuestion("History", q, a, wrongs, rnd);
-    });
-
-    const movieFacts = DATA.movies.facts;
-    pools.push(() => {
-      const [q, a] = pick(movieFacts, rnd);
-      const wrongs = movieFacts.map(x => x[1]).filter(x => normalize(x) !== normalize(a));
-      return makeQuestion("Movies", q, a, wrongs, rnd);
-    });
-
-    const musicFacts = DATA.music.facts;
-    pools.push(() => {
-      const [q, a] = pick(musicFacts, rnd);
-      const wrongs = musicFacts.map(x => x[1]).filter(x => normalize(x) !== normalize(a));
-      return makeQuestion("Music", q, a, wrongs, rnd);
-    });
-
-    const sportsFacts = DATA.sports.facts;
-    pools.push(() => {
-      const [q, a] = pick(sportsFacts, rnd);
-      const wrongs = sportsFacts.map(x => x[1]).filter(x => normalize(x) !== normalize(a));
-      return makeQuestion("Sports", q, a, wrongs, rnd);
-    });
-
-    const techFacts = DATA.tech.facts;
-    pools.push(() => {
-      const [q, a] = pick(techFacts, rnd);
-      const wrongs = techFacts.map(x => x[1]).filter(x => normalize(x) !== normalize(a));
-      return makeQuestion("Tech", q, a, wrongs, rnd);
-    });
-
-    const genFacts = DATA.general.facts;
-    pools.push(() => {
-      const [q, a] = pick(genFacts, rnd);
-      const wrongs = genFacts.map(x => x[1]).filter(x => normalize(x) !== normalize(a));
-      return makeQuestion("General", q, a, wrongs, rnd);
-    });
-
-    pools.push(() => {
-      const ops = ["+","-","×"];
-      const op = pick(ops, rnd);
-      let a,b,ans,q;
-      if (op === "+") {
-        a = 10 + Math.floor(rnd()*990);
-        b = 10 + Math.floor(rnd()*990);
-        ans = a + b;
-        q = "What is " + a + " + " + b + "?";
-      } else if (op === "-") {
-        a = 100 + Math.floor(rnd()*900);
-        b = 10 + Math.floor(rnd()*90);
-        ans = a - b;
-        q = "What is " + a + " - " + b + "?";
-      } else {
-        a = 2 + Math.floor(rnd()*18);
-        b = 2 + Math.floor(rnd()*18);
-        ans = a * b;
-        q = "What is " + a + " × " + b + "?";
-      }
-      return makeQuestion("Math", q, String(ans), [], rnd);
-    });
-
-    pools.push(() => {
-      const n = 2 + Math.floor(rnd()*98);
-      const sq = n*n;
-      const q = "What is " + n + " squared?";
-      return makeQuestion("Math", q, String(sq), [], rnd);
-    });
-
-    let guard = 0;
-    while (bank.length < target && guard++ < target * 60) {
-      const maker = pools[bank.length % pools.length];
-      const q = maker();
-
-      const key = normalize(q.category) + "|" + normalize(q.question);
-      if (seenQ.has(key)) continue;
-
-      if (SETTINGS.noImmediateRepeat && bank.length > 0) {
-        const prev = bank[bank.length - 1];
-        if (normalize(prev.question) === normalize(q.question)) continue;
-      }
-
-      seenQ.add(key);
-      bank.push(q);
+    function clearRevealStyles(){
+      const nodes = Array.from(elAnsWrap.children);
+      nodes.forEach(n => n.classList.remove("good","bad"));
     }
 
-    shuffleInPlace(bank, rnd);
+    function start(){
+      ensureBank();
 
-    if (SETTINGS.noImmediateRepeat && bank.length > 1) {
-      const first = bank[0];
-      const last = bank[bank.length - 1];
-      if (normalize(first.question) === normalize(last.question)) {
-        for (let i = 1; i < bank.length - 1; i++) {
-          if (normalize(bank[i].question) !== normalize(last.question)) {
-            [bank[0], bank[i]] = [bank[i], bank[0]];
-            break;
+      const bank = window.TRIVIA_BANK;
+      const order = window.TRIVIA_ORDER && window.TRIVIA_ORDER.length === bank.length
+        ? window.TRIVIA_ORDER
+        : Array.from({length: bank.length}, (_,i)=>i);
+
+      let state = loadState();
+      let pos = Number.isFinite(state.pos) ? state.pos : 0;
+
+      // clamp
+      if (pos < 0 || pos >= order.length) pos = 0;
+
+      function nextQuestion(){
+        const qIndex = order[pos];
+        const q = bank[qIndex];
+
+        // Save last question text for boundary anti-repeat
+        try{
+          localStorage.setItem("dcbyron_last_question_v4", String(q.question || ""));
+        }catch(e){}
+
+        renderQuestion(q, pos, order.length);
+        clearRevealStyles();
+
+        // thinking bar
+        elHint.textContent = "Reveal soon";
+        let t = 0;
+        const totalTicks = Math.max(1, Math.floor(SETTINGS.thinkMs / SETTINGS.tickMs));
+        const timer = setInterval(() => {
+          t++;
+          elFill.style.width = (t / totalTicks * 100).toFixed(2) + "%";
+          if (t >= totalTicks){
+            clearInterval(timer);
+            // reveal
+            setRevealStyles(q.correct);
+            elHint.textContent = "Answer revealed";
+            setTimeout(() => {
+              // advance
+              pos++;
+              if (pos >= order.length) pos = 0;
+              saveState({ pos });
+              elFill.style.width = "0%";
+              nextQuestion();
+            }, SETTINGS.revealMs);
           }
-        }
-      }
-    }
-
-    return bank.slice(0, target);
-  }
-
-  const elQ = document.getElementById("questionText");
-  const elAnswers = document.getElementById("answers");
-  const elCat = document.getElementById("catChip");
-  const elCount = document.getElementById("countChip");
-  const elCountOf = document.getElementById("countOf");
-  const elBar = document.getElementById("barFill");
-  const elRight = document.getElementById("rightLine");
-  const elSub = document.getElementById("subline");
-
-  function setAnswerClasses(correctIndex, revealOn) {
-    const nodes = Array.from(elAnswers.querySelectorAll(".ans"));
-    nodes.forEach((n, i) => {
-      n.classList.remove("good","bad");
-      if (!revealOn) return;
-      if (i === correctIndex) n.classList.add("good");
-      else n.classList.add("bad");
-    });
-  }
-
-  function renderQuestion(q, idx, total) {
-    elSub.textContent = "Automated rotation through full bank";
-    elQ.textContent = q.question;
-    elCat.textContent = q.category;
-    elCount.textContent = String(idx + 1);
-    elCountOf.textContent = "of " + String(total);
-
-    const letters = ["A","B","C","D"];
-    const nodes = Array.from(elAnswers.querySelectorAll(".ans"));
-    for (let i = 0; i < 4; i++) {
-      const badge = nodes[i].querySelector(".badge");
-      const txt = nodes[i].querySelector(".txt");
-      badge.textContent = letters[i];
-      txt.textContent = q.answers[i];
-      nodes[i].style.visibility = "visible";
-    }
-
-    setAnswerClasses(q.correct, false);
-  }
-
-  function loadState() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return null;
-      return JSON.parse(raw);
-    } catch {
-      return null;
-    }
-  }
-
-  function saveState(state) {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
-  }
-
-  function main() {
-    const QUESTIONS = buildBank(SETTINGS.totalQuestions);
-
-    let state = loadState() || {};
-    if (!Number.isInteger(state.index) || state.index < 0 || state.index >= QUESTIONS.length) state.index = 0;
-
-    let lastQuestionKey = state.lastQuestionKey || "";
-
-    function nextIndex() {
-      let ni = state.index + 1;
-      if (ni >= QUESTIONS.length) ni = 0;
-
-      if (SETTINGS.noImmediateRepeat) {
-        const current = QUESTIONS[state.index];
-        const next = QUESTIONS[ni];
-        const curKey = normalize(current.question);
-        const nextKey = normalize(next.question);
-
-        if (curKey === nextKey) {
-          for (let k = 0; k < 25; k++) {
-            const alt = (ni + 1 + k) % QUESTIONS.length;
-            if (normalize(QUESTIONS[alt].question) !== curKey) { ni = alt; break; }
-          }
-        }
-      }
-      return ni;
-    }
-
-    function tickCycle() {
-      const q = QUESTIONS[state.index];
-      const qKey = normalize(q.question);
-
-      if (SETTINGS.noImmediateRepeat && lastQuestionKey && qKey === lastQuestionKey) {
-        state.index = nextIndex();
+        }, SETTINGS.tickMs);
       }
 
-      renderQuestion(QUESTIONS[state.index], state.index, QUESTIONS.length);
-      lastQuestionKey = normalize(QUESTIONS[state.index].question);
-
-      let t = 0;
-      const thinkSteps = Math.max(1, Math.floor(SETTINGS.thinkMs / SETTINGS.tickMs));
-      const revealSteps = Math.max(1, Math.floor(SETTINGS.revealMs / SETTINGS.tickMs));
-      const totalSteps = thinkSteps + revealSteps;
-
-      elRight.textContent = "Reveal soon";
-      elBar.style.width = "0%";
-      setAnswerClasses(QUESTIONS[state.index].correct, false);
-
-      const timer = setInterval(() => {
-        t++;
-        const pct = Math.min(100, Math.floor((t / totalSteps) * 100));
-        elBar.style.width = pct + "%";
-
-        if (t === thinkSteps) {
-          elRight.textContent = "Answer";
-          setAnswerClasses(QUESTIONS[state.index].correct, true);
-        }
-
-        if (t >= totalSteps) {
-          clearInterval(timer);
-          state.index = nextIndex();
-          state.lastQuestionKey = lastQuestionKey;
-          saveState(state);
-          setTimeout(tickCycle, 80);
-        }
-      }, SETTINGS.tickMs);
+      nextQuestion();
     }
 
-    tickCycle();
-  }
-
-  main();
-})();
-</script>
+    start();
+  </script>
 </body>
 </html>
