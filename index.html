@@ -1,478 +1,196 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Derrick C Byron Trivia Overlay</title>
-  <style>
-    :root{
-      /* Quick styling knobs */
-      --overlay-width: min(1200px, 94vw);
-      --radius: 28px;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Derrick C Byron Cinematic 24 7 Trivia</title>
 
-      /* Glass look */
-      --panel-bg: rgba(12, 14, 20, 0.42);
-      --panel-border: rgba(255, 255, 255, 0.12);
-      --panel-shadow: 0 18px 60px rgba(0,0,0,0.45);
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
 
-      /* Text */
-      --text: rgba(255,255,255,0.92);
-      --muted: rgba(255,255,255,0.70);
+body {
+  width:100vw;
+  height:100vh;
+  background: transparent;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
 
-      /* Accents */
-      --accent: rgba(140, 180, 255, 0.95);
-      --accent-2: rgba(160, 120, 255, 0.95);
-      --correct: rgba(90, 220, 160, 0.95);
+.overlay {
+  width:80%;
+  max-width:1500px;
+  padding:60px;
+  border-radius:28px;
+  background: rgba(18,18,28,0.78);
+  backdrop-filter: blur(18px);
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 40px 100px rgba(0,0,0,0.55);
+}
 
-      /* Options */
-      --option-bg: rgba(255,255,255,0.08);
-      --option-border: rgba(255,255,255,0.10);
-      --option-hover: rgba(255,255,255,0.12);
-      --option-correct: rgba(90, 220, 160, 0.18);
+.brand {
+  font-size:22px;
+  letter-spacing:3px;
+  color:#7da2ff;
+  margin-bottom:10px;
+}
 
-      /* Progress */
-      --bar-bg: rgba(255,255,255,0.12);
-      --bar-fill: linear-gradient(90deg, rgba(140,180,255,0.95), rgba(160,120,255,0.95));
-    }
+.title {
+  font-size:58px;
+  font-weight:700;
+  line-height:1.2;
+  color:rgba(255,255,255,0.97);
+  text-shadow:0 4px 18px rgba(0,0,0,0.6);
+  margin-bottom:40px;
+}
 
-    html, body{
-      height: 100%;
-      margin: 0;
-      background: transparent;
-      font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    }
+.answers {
+  list-style:none;
+  margin-bottom:40px;
+}
 
-    /* This keeps it overlay friendly */
-    body{
-      display: grid;
-      place-items: center;
-      padding: 2vh 2vw;
-      color: var(--text);
-    }
+.answers li {
+  font-size:28px;
+  padding:20px 25px;
+  margin-bottom:15px;
+  border-radius:14px;
+  background: rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.08);
+  color:white;
+  transition:all .3s ease;
+}
 
-    .panel{
-      width: var(--overlay-width);
-      border-radius: var(--radius);
-      background: var(--panel-bg);
-      border: 1px solid var(--panel-border);
-      box-shadow: var(--panel-shadow);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      overflow: hidden;
-    }
+.answers li.correct {
+  background: rgba(80,255,160,0.25);
+  border:1px solid rgba(80,255,160,0.6);
+}
 
-    .header{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 18px 22px 10px 22px;
-    }
+.meta {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:18px;
+  color:rgba(255,255,255,0.75);
+  margin-bottom:10px;
+}
 
-    .brand{
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      min-width: 0;
-    }
+.progress-bar {
+  height:10px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.08);
+  overflow:hidden;
+}
 
-    .brand .name{
-      font-weight: 700;
-      letter-spacing: 0.2px;
-      font-size: 16px;
-      color: var(--muted);
-    }
+.progress {
+  height:100%;
+  width:0%;
+  background: linear-gradient(90deg,#7da2ff,#b07dff);
+  transition:width .1s linear;
+}
 
-    .brand .mode{
-      font-weight: 800;
-      font-size: 14px;
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-      background: linear-gradient(90deg, rgba(140,180,255,0.95), rgba(160,120,255,0.95));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .pillRow{
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .pill{
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(0,0,0,0.22);
-      font-size: 13px;
-      color: var(--muted);
-      user-select: none;
-      white-space: nowrap;
-    }
-
-    .dot{
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: var(--accent);
-      box-shadow: 0 0 18px rgba(140,180,255,0.65);
-    }
-
-    .category{
-      font-weight: 700;
-      color: rgba(255,255,255,0.86);
-    }
-
-    .content{
-      padding: 6px 22px 18px 22px;
-    }
-
-    .question{
-      font-size: clamp(24px, 3.2vw, 44px);
-      line-height: 1.12;
-      font-weight: 900;
-      letter-spacing: 0.2px;
-      margin: 6px 0 14px 0;
-    }
-
-    .options{
-      display: grid;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .opt{
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      padding: 14px 14px;
-      border-radius: 16px;
-      border: 1px solid var(--option-border);
-      background: var(--option-bg);
-      transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
-      user-select: none;
-    }
-
-    .opt:hover{
-      background: var(--option-hover);
-      transform: translateY(-1px);
-      border-color: rgba(255,255,255,0.16);
-    }
-
-    .badge{
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      font-weight: 900;
-      color: rgba(255,255,255,0.92);
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.10);
-      flex: 0 0 auto;
-    }
-
-    .optText{
-      font-size: 18px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.90);
-      flex: 1 1 auto;
-      min-width: 0;
-      word-break: break-word;
-    }
-
-    .footer{
-      padding: 14px 22px 18px 22px;
-      display: grid;
-      gap: 10px;
-      border-top: 1px solid rgba(255,255,255,0.10);
-      background: rgba(0,0,0,0.16);
-    }
-
-    .progressRow{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .bar{
-      width: 100%;
-      height: 10px;
-      border-radius: 999px;
-      background: var(--bar-bg);
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.10);
-    }
-
-    .fill{
-      height: 100%;
-      width: 0%;
-      background: var(--bar-fill);
-      border-radius: 999px;
-      transition: width 100ms linear;
-    }
-
-    .reveal{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      font-size: 14px;
-      color: rgba(255,255,255,0.86);
-    }
-
-    .answerTag{
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(90, 220, 160, 0.12);
-      color: rgba(255,255,255,0.92);
-      font-weight: 800;
-    }
-
-    .answerDot{
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: var(--correct);
-      box-shadow: 0 0 18px rgba(90,220,160,0.60);
-    }
-
-    .hidden{
-      opacity: 0;
-      transform: translateY(6px);
-      pointer-events: none;
-      transition: opacity 220ms ease, transform 220ms ease;
-    }
-
-    .shown{
-      opacity: 1;
-      transform: translateY(0px);
-      pointer-events: auto;
-    }
-
-    .correct{
-      background: var(--option-correct);
-      border-color: rgba(90, 220, 160, 0.35);
-    }
-
-    .note{
-      font-size: 12px;
-      color: rgba(255,255,255,0.55);
-    }
-  </style>
+.category {
+  background: rgba(125,162,255,0.18);
+  padding:8px 16px;
+  border-radius:30px;
+  font-size:14px;
+  letter-spacing:1px;
+}
+</style>
 </head>
 
 <body>
-  <div class="panel" id="panel">
-    <div class="header">
-      <div class="brand">
-        <div class="name">Derrick C Byron</div>
-        <div class="mode">Cinematic 24 7 trivia</div>
-      </div>
 
-      <div class="pillRow">
-        <div class="pill">
-          <span class="dot"></span>
-          <span class="category" id="categoryLabel">Category</span>
-        </div>
-        <div class="pill" id="phasePill">Question</div>
-        <div class="pill"><span id="countdown">10</span>s</div>
-      </div>
-    </div>
-
-    <div class="content">
-      <div class="question" id="questionText">Loading</div>
-
-      <div class="options" id="options"></div>
-    </div>
-
-    <div class="footer">
-      <div class="progressRow">
-        <div id="hintText">Answer in your head</div>
-        <div id="statusText">Reveal soon</div>
-      </div>
-
-      <div class="bar">
-        <div class="fill" id="fill"></div>
-      </div>
-
-      <div class="reveal hidden" id="revealRow">
-        <div class="answerTag">
-          <span class="answerDot"></span>
-          <span id="answerText">Answer</span>
-        </div>
-        <div class="note">Tip: use as a browser source overlay</div>
-      </div>
-    </div>
+<div class="overlay">
+  <div class="meta">
+    <div>Derrick C Byron Cinematic 24 7 Trivia</div>
+    <div class="category" id="category"></div>
   </div>
 
-  <script>
-    /* Timing */
-    const config = {
-      questionSeconds: 12,
-      revealSeconds: 6,
-      shuffleOnStart: true,
-      reshuffleOnLoop: true
-    };
+  <div class="title" id="question"></div>
 
-    /* Question bank
-       Add as many as you want. Keep correct as the exact string in options.
-    */
-    let questions = [
-      { cat: "Science", q: "Which element has the chemical symbol O?", options: ["Gold","Osmium","Oxygen","Iron"], correct: "Oxygen" },
-      { cat: "Space", q: "What galaxy do we live in?", options: ["Andromeda","Milky Way","Sombrero","Whirlpool"], correct: "Milky Way" },
-      { cat: "History", q: "Which ancient civilization built the pyramids of Giza?", options: ["Romans","Egyptians","Vikings","Persians"], correct: "Egyptians" },
-      { cat: "Music", q: "How many strings does a standard guitar have?", options: ["4","5","6","7"], correct: "6" },
-      { cat: "Geography", q: "Which is the largest ocean on Earth?", options: ["Atlantic","Indian","Arctic","Pacific"], correct: "Pacific" },
-      { cat: "Movies", q: "What is the name of the wizard school in Harry Potter?", options: ["Hogwarts","Durmstrang","Beauxbatons","Ilvermorny"], correct: "Hogwarts" },
-      { cat: "Astronomy", q: "What is the name of our star?", options: ["Polaris","Sirius","The Sun","Betelgeuse"], correct: "The Sun" },
-      { cat: "Science", q: "Water freezes at what temperature in Celsius?", options: ["0","10","32","100"], correct: "0" },
-      { cat: "History", q: "Who was the first President of the United States?", options: ["John Adams","George Washington","Thomas Jefferson","James Madison"], correct: "George Washington" },
-      { cat: "Space", q: "Which planet is known as the Red Planet?", options: ["Mars","Jupiter","Venus","Mercury"], correct: "Mars" },
-      { cat: "Music", q: "What is the musical term for a gradual increase in volume?", options: ["Staccato","Crescendo","Legato","Fermata"], correct: "Crescendo" },
-      { cat: "Geography", q: "Which country has the city of Tokyo?", options: ["China","Japan","South Korea","Thailand"], correct: "Japan" }
-    ];
+  <ul class="answers" id="answers"></ul>
 
-    const el = {
-      category: document.getElementById("categoryLabel"),
-      phasePill: document.getElementById("phasePill"),
-      countdown: document.getElementById("countdown"),
-      question: document.getElementById("questionText"),
-      options: document.getElementById("options"),
-      fill: document.getElementById("fill"),
-      revealRow: document.getElementById("revealRow"),
-      answerText: document.getElementById("answerText"),
-      hintText: document.getElementById("hintText"),
-      statusText: document.getElementById("statusText")
-    };
+  <div class="progress-bar">
+    <div class="progress" id="progress"></div>
+  </div>
+</div>
 
-    function shuffle(array){
-      for(let i = array.length - 1; i > 0; i--){
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    }
+<script>
 
-    function renderQuestion(item){
-      el.category.textContent = item.cat;
-      el.question.textContent = item.q;
+const QUESTION_TIME = 15000;
 
-      el.options.innerHTML = "";
-      const letters = ["A","B","C","D"];
+const questions = [
 
-      item.options.forEach((opt, idx) => {
-        const row = document.createElement("div");
-        row.className = "opt";
-        row.setAttribute("data-opt", opt);
+{category:"Space", q:"Which planet is known as the Red Planet?", a:["Mars","Jupiter","Venus","Mercury"], correct:0},
+{category:"Astronomy", q:"What galaxy do we live in?", a:["Andromeda","Milky Way","Whirlpool","Sombrero"], correct:1},
+{category:"Music", q:"Who was known as the King of Pop?", a:["Prince","Michael Jackson","Elvis Presley","Madonna"], correct:1},
+{category:"Film", q:"Which movie features the character Neo?", a:["Inception","The Matrix","Avatar","Tron"], correct:1},
+{category:"History", q:"In which year did World War II end?", a:["1943","1945","1947","1950"], correct:1},
+{category:"World Facts", q:"Which is the largest ocean on Earth?", a:["Atlantic","Pacific","Indian","Arctic"], correct:1},
+{category:"Science", q:"What is the chemical symbol for Oxygen?", a:["O","Ox","Og","Om"], correct:0},
+{category:"Geography", q:"Mount Everest lies on the border of Nepal and which country?", a:["China","India","Bhutan","Pakistan"], correct:0},
+{category:"Film", q:"Who directed Titanic?", a:["James Cameron","Spielberg","Nolan","Scott"], correct:0},
+{category:"Music", q:"Which band released Dark Side of the Moon?", a:["Pink Floyd","Beatles","Queen","U2"], correct:0}
 
-        const badge = document.createElement("div");
-        badge.className = "badge";
-        badge.textContent = letters[idx] || "";
+];
 
-        const text = document.createElement("div");
-        text.className = "optText";
-        text.textContent = opt;
+let current = 0;
+let timer;
+let progressInterval;
 
-        row.appendChild(badge);
-        row.appendChild(text);
-        el.options.appendChild(row);
-      });
+function showQuestion() {
 
-      el.revealRow.classList.remove("shown");
-      el.revealRow.classList.add("hidden");
-      el.answerText.textContent = "Answer";
-      el.hintText.textContent = "Answer in your head";
-      el.statusText.textContent = "Reveal soon";
+const q = questions[current];
 
-      Array.from(el.options.children).forEach(x => x.classList.remove("correct"));
-    }
+document.getElementById("category").innerText = q.category;
+document.getElementById("question").innerText = q.q;
 
-    function highlightCorrect(correct){
-      const rows = Array.from(el.options.children);
-      rows.forEach(r => {
-        if(r.getAttribute("data-opt") === correct){
-          r.classList.add("correct");
-        }
-      });
-    }
+const answersEl = document.getElementById("answers");
+answersEl.innerHTML = "";
 
-    let idx = 0;
-    let phase = "question";
-    let remaining = config.questionSeconds;
-    let total = config.questionSeconds;
+q.a.forEach((text,i)=>{
+  const li = document.createElement("li");
+  li.innerText = String.fromCharCode(65+i)+". "+text;
+  answersEl.appendChild(li);
+});
 
-    function setPhase(next){
-      phase = next;
+startTimer();
+}
 
-      if(phase === "question"){
-        el.phasePill.textContent = "Question";
-        remaining = config.questionSeconds;
-        total = config.questionSeconds;
-        el.revealRow.classList.remove("shown");
-        el.revealRow.classList.add("hidden");
-      } else {
-        el.phasePill.textContent = "Reveal";
-        remaining = config.revealSeconds;
-        total = config.revealSeconds;
-        el.revealRow.classList.remove("hidden");
-        el.revealRow.classList.add("shown");
-        el.hintText.textContent = "Correct answer";
-        el.statusText.textContent = "Next question soon";
-      }
-    }
+function startTimer() {
 
-    function nextQuestion(){
-      if(idx >= questions.length){
-        idx = 0;
-        if(config.reshuffleOnLoop) shuffle(questions);
-      }
-      const item = questions[idx];
-      renderQuestion(item);
-      setPhase("question");
-      idx += 1;
-    }
+let time = 0;
+const progress = document.getElementById("progress");
+progress.style.width = "0%";
 
-    function revealAnswer(){
-      const current = questions[idx - 1];
-      el.answerText.textContent = current.correct;
-      highlightCorrect(current.correct);
-      setPhase("reveal");
-    }
+progressInterval = setInterval(()=>{
+  time += 100;
+  progress.style.width = (time/QUESTION_TIME*100)+"%";
+},100);
 
-    function tick(){
-      remaining -= 0.1;
-      if(remaining < 0) remaining = 0;
+timer = setTimeout(()=>{
+  revealAnswer();
+},QUESTION_TIME);
 
-      el.countdown.textContent = Math.ceil(remaining).toString();
-      const pct = ((total - remaining) / total) * 100;
-      el.fill.style.width = Math.min(100, Math.max(0, pct)) + "%";
+}
 
-      if(remaining <= 0.001){
-        if(phase === "question"){
-          revealAnswer();
-        } else {
-          nextQuestion();
-        }
-      }
-    }
+function revealAnswer() {
 
-    if(config.shuffleOnStart) shuffle(questions);
-    nextQuestion();
-    setInterval(tick, 100);
-  </script>
+clearInterval(progressInterval);
+
+const items = document.querySelectorAll(".answers li");
+items[questions[current].correct].classList.add("correct");
+
+setTimeout(()=>{
+  current = (current+1)%questions.length;
+  showQuestion();
+},4000);
+
+}
+
+showQuestion();
+
+</script>
 </body>
 </html>
